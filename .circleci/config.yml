@@ -1,0 +1,70 @@
+version: 2.1
+orbs:
+  node: circleci/node@3.0.0
+jobs:
+  install-dependencies:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - run: npm ci
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+  lint:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run: npm run lint
+  build:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run: npm run build
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - dist
+  deploy:
+    executor: node/default
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: install netlify cli
+          command: sudo npm install netlify-cli -g
+      - run:
+          name: deploy to netlify
+          command: netlify deploy --dir=dist -p
+workflows:
+  lint-deploy:
+    jobs:
+      - install-dependencies
+      - lint:
+          requires:
+            - install-dependencies
+      - build:
+          requires:
+            - lint
+      - hold:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only: develop
+      - deploy:
+          context: netlify
+          requires:
+            - hold
+          filters:
+            branches:
+              only: develop

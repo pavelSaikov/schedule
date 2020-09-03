@@ -22,7 +22,11 @@
   "dependencies": {
     "@types/react": "^16.9.48",
     "@types/react-dom": "^16.9.8",
+    "antd": "^4.6.2",
+    "moment": "^2.27.0",
+    "moment-timezone": "^0.5.31",
     "react": "^16.13.1",
+    "react-color": "^2.18.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",

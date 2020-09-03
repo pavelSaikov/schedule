@@ -1,7 +1,14 @@
-import * as React from 'react';
-
 import './app.scss';
 
-export const App: React.FC = () => {
-  return <h1>Hello, React</h1>;
+import React, { FC } from 'react';
+import { Provider } from 'react-redux';
+
+import { store } from './store';
+
+export const App: FC = () => {
+  return (
+    <Provider store={store}>
+      <h1>Hello, React</h1>
+    </Provider>
+  );
 };

@@ -124,3 +124,11 @@ export enum AppMode {
   student = 'student',
   mentor = 'mentor',
 }
+
+export enum ScheduleMode {
+  table = 'Table',
+  list = 'List',
+  calendar = 'Calendar',
+}
+
+export const ScheduleModes: ScheduleMode[] = [ScheduleMode.table, ScheduleMode.list, ScheduleMode.calendar];

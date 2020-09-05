@@ -2,7 +2,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import thunk from 'redux-thunk';
 
-import { headerReducer } from '../components/header/store/header.reducer';
+import { headerReducer } from '../common/components/header/store/header.reducer';
 import { mainReducer } from '../pages/main/store/main.reducer';
 import { appReducer } from './app.reducer';
 

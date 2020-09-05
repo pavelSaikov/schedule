@@ -14,12 +14,15 @@ export const CommonHeader: FC = () => {
   const timeZone: TimeZone = useSelector(timeZoneSelector);
   const dispatch = useDispatch();
 
-  const onTimeZoneChange = useCallback((value: TimeZone) => {
-    if (value === timeZone) {
-      return;
-    }
-    dispatch(setTimeZone({ payload: value }));
-  }, []);
+  const onTimeZoneChange = useCallback(
+    (value: TimeZone) => {
+      if (value === timeZone) {
+        return;
+      }
+      dispatch(setTimeZone({ payload: value }));
+    },
+    [timeZone],
+  );
 
   const onModeChange = useCallback(
     (checked: boolean) => dispatch(setAppMode({ payload: checked ? AppMode.mentor : AppMode.student })),

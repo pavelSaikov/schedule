@@ -99,8 +99,8 @@ export enum TimeZone {
   europeMinsk = 'Europe/Minsk',
   europeMoscow = 'Europe/Moscow',
   europeVolgograd = 'Europe/Volgograd',
-  europeYekaterinburg = 'Europe/Yekaterinburg',
-  asiaTashkent = 'Europe/Tashkent',
+  europeYekaterinburg = 'Asia/Yekaterinburg',
+  asiaTashkent = 'Asia/Tashkent',
   asiaKrasnoyarsk = 'Asia/Krasnoyarsk',
   asiaAlmaty = 'Asia/Almaty',
   asiaVladivostok = 'Asia/Vladivostok',
@@ -119,6 +119,8 @@ export const TimeZones: TimeZone[] = [
   TimeZone.asiaAlmaty,
   TimeZone.asiaVladivostok,
 ];
+
+export const BASE_TIMEZONE: TimeZone = TimeZone.europeMoscow;
 
 export enum AppMode {
   student = 'student',

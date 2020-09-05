@@ -3,28 +3,22 @@ import './time-cell.scss';
 import { EditOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 import Text from 'antd/lib/typography/Text';
-import momentTimeZone from 'moment-timezone';
+import moment from 'moment-timezone';
 import React, { useEffect, useState, FC } from 'react';
-import { useSelector } from 'react-redux';
 
-import { appModeSelector, timeZoneSelector } from '../../../../../../components/header/store/header.selectors';
 import { AppMode, TimeZone } from '../../../../../../models/app.models';
 
 interface ITimeCell {
   dateTime: string;
   onEditClick: () => void;
+  timeZone: TimeZone;
+  appMode: AppMode;
 }
 
-export const TimeCell: FC<ITimeCell> = ({ dateTime, onEditClick }) => {
-  const timeZone: TimeZone = useSelector(timeZoneSelector);
-  const appMode: AppMode = useSelector(appModeSelector);
-
+export const TimeCell: FC<ITimeCell> = ({ dateTime, onEditClick, timeZone, appMode }) => {
   const [time, setTime] = useState<string>();
 
-  useEffect(() => setTime(momentTimeZone.tz(dateTime, timeZone).format('HH mm').split(' ').join(':')), [
-    timeZone,
-    dateTime,
-  ]);
+  useEffect(() => setTime(moment.tz(dateTime, timeZone).format('HH:mm')), [timeZone, dateTime]);
 
   return (
     <div className="time-cell_wrapper">

@@ -3,26 +3,20 @@ import './date-cell.scss';
 import { EditOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 import Text from 'antd/lib/typography/Text';
-import momentTimeZone from 'moment-timezone';
+import moment from 'moment-timezone';
 import React, { useEffect, useState, FC } from 'react';
-import { useSelector } from 'react-redux';
 
-import { appModeSelector, timeZoneSelector } from '../../../../../../components/header/store/header.selectors';
-import { AppMode } from '../../../../../../models/app.models';
+import { AppMode, TimeZone } from '../../../../../../models/app.models';
 
 interface IDateCell {
   dateTime: string;
   onEditClick: () => void;
+  timeZone: TimeZone;
+  appMode: AppMode;
 }
 
-export const DateCell: FC<IDateCell> = ({ dateTime, onEditClick }) => {
-  const timeZone = useSelector(timeZoneSelector);
-  const appMode = useSelector(appModeSelector);
-
-  useEffect(() => setDate(momentTimeZone.tz(dateTime, timeZone).format('DD MM YYYY').split(' ').join('-')), [
-    dateTime,
-    timeZone,
-  ]);
+export const DateCell: FC<IDateCell> = ({ dateTime, onEditClick, timeZone, appMode }) => {
+  useEffect(() => setDate(moment.tz(dateTime, timeZone).format('DD-MM-YYYY')), [dateTime, timeZone]);
 
   const [date, setDate] = useState<string>();
 

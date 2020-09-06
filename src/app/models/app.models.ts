@@ -1,4 +1,4 @@
-export enum TaskName {
+export enum EventName {
   jsTask = 'js task',
   test = 'test',
   codewars = 'codewars',
@@ -41,24 +41,31 @@ export interface ILinkWithDescription {
   url: string;
 }
 
-export interface ITask {
-  id: number;
-  taskName: TaskName;
+export interface IEventCategory {
+  id: string;
+  categoryName: string;
+  backgroundColor: string;
+  textColor: string;
+}
+
+export interface IEvent {
+  id: string;
+  eventCategoryName: string;
   title: string;
   description: string;
   comment: string;
   dateTime: string;
-  deadlineDate?: string;
+  deadlineDate: string;
   organizer: string;
-  broadcastUrl?: string;
-  images?: string;
-  videos?: string;
+  broadcastUrl: string;
+  images: string[];
+  videos: string[];
   links: ILinkWithDescription[];
   isFeedbackAvailable: boolean;
   feedbacks: string[];
   isQuestionFormAvailable: boolean;
   questions: string[];
-  mapCoordinates?: number;
+  mapCoordinates: number[];
 }
 
 export interface IDescriptionPageContentPermissions {
@@ -67,13 +74,13 @@ export interface IDescriptionPageContentPermissions {
   isMapAvailable: boolean;
 }
 
-export const TaskNameDescriptionPageContentPermissionsMap = new Map<TaskName, IDescriptionPageContentPermissions>([
-  [TaskName.codewars, { isVideosAvailable: false, isPhotosAvailable: false, isMapAvailable: false }],
-  [TaskName.test, { isVideosAvailable: false, isPhotosAvailable: false, isMapAvailable: false }],
-  [TaskName.jsTask, { isVideosAvailable: true, isPhotosAvailable: true, isMapAvailable: false }],
-  [TaskName.lecture, { isVideosAvailable: true, isPhotosAvailable: false, isMapAvailable: false }],
-  [TaskName.interview, { isVideosAvailable: true, isPhotosAvailable: false, isMapAvailable: false }],
-  [TaskName.meetup, { isVideosAvailable: true, isPhotosAvailable: true, isMapAvailable: true }],
+export const TaskNameDescriptionPageContentPermissionsMap = new Map<EventName, IDescriptionPageContentPermissions>([
+  [EventName.codewars, { isVideosAvailable: false, isPhotosAvailable: false, isMapAvailable: false }],
+  [EventName.test, { isVideosAvailable: false, isPhotosAvailable: false, isMapAvailable: false }],
+  [EventName.jsTask, { isVideosAvailable: true, isPhotosAvailable: true, isMapAvailable: false }],
+  [EventName.lecture, { isVideosAvailable: true, isPhotosAvailable: false, isMapAvailable: false }],
+  [EventName.interview, { isVideosAvailable: true, isPhotosAvailable: false, isMapAvailable: false }],
+  [EventName.meetup, { isVideosAvailable: true, isPhotosAvailable: true, isMapAvailable: true }],
 ]);
 
 export interface IRowCategory {

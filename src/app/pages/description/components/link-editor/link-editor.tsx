@@ -13,7 +13,12 @@ interface ILinkEditor {
   onCancelClick: () => void;
 }
 
-export const LinkEditor: FC<ILinkEditor> = ({ linkWithDescription, isVisible, onSubmitClick, onCancelClick }) => {
+export const LinkEditor: FC<ILinkEditor> = ({
+  linkWithDescription,
+  isVisible,
+  onSubmitClick,
+  onCancelClick,
+}) => {
   const [form] = useForm();
 
   const onSubmit = useCallback(() => {
@@ -24,15 +29,22 @@ export const LinkEditor: FC<ILinkEditor> = ({ linkWithDescription, isVisible, on
         onSubmitClick(values);
       })
       .catch(() => {});
-  }, []);
+  }, [form, onSubmitClick]);
 
   const onCancel = useCallback(() => {
     form.resetFields();
     onCancelClick();
-  }, []);
+  }, [form, onCancelClick]);
 
   return (
-    <Modal title="Edit Link" visible={isVisible} centered okText={'Submit'} onCancel={onCancel} onOk={onSubmit}>
+    <Modal
+      title="Edit Link"
+      visible={isVisible}
+      centered
+      okText={'Submit'}
+      onCancel={onCancel}
+      onOk={onSubmit}
+    >
       <Form
         form={form}
         layout="vertical"

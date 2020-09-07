@@ -1,5 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
+const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
+const currentYear = new Date().getFullYear();
 
 module.exports = envOptions => {
   const mode = envOptions && envOptions.production ? 'production' : 'development';
@@ -41,6 +44,24 @@ module.exports = envOptions => {
       new HtmlWebpackPlugin({
         filename: 'index.html',
         template: './src/index.html',
+      }),
+      new MomentLocalesPlugin(),
+      new MomentTimezoneDataPlugin({
+        matchZones: [
+          'Europe/London',
+          'Europe/Warsaw',
+          'Europe/Kiev',
+          'Europe/Minsk',
+          'Europe/Moscow',
+          'Europe/Volgograd',
+          'Asia/Yekaterinburg',
+          'Asia/Tashkent',
+          'Asia/Krasnoyarsk',
+          'Asia/Almaty',
+          'Asia/Vladivostok',
+        ],
+        startYear: currentYear - 10,
+        endYear: currentYear + 10,
       }),
     ],
     devtool: 'source-map',

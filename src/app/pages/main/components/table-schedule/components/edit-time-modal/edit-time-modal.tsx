@@ -2,7 +2,7 @@ import './edit-time-modal.scss';
 
 import { Select, TimePicker } from 'antd';
 import Modal from 'antd/lib/modal/Modal';
-import moment from 'moment';
+import { Moment } from 'moment';
 import momentTimeZone from 'moment-timezone';
 import React, { useCallback, useEffect, useState, FC } from 'react';
 
@@ -23,17 +23,20 @@ export const EditTimeModal: FC<IEditTimeModal> = ({
   defaultTimeZone,
   visible,
 }) => {
-  const [time, setTime] = useState<moment.Moment>();
+  const [time, setTime] = useState<Moment>();
   const [timeZone, setTimeZone] = useState(defaultTimeZone);
   const [prevTimeZone, setPrevTimeZone] = useState(defaultTimeZone);
 
   const onTimeZoneSelect = useCallback((newTimeZone: TimeZone) => setTimeZone(newTimeZone), []);
-  const onTimeSelect = useCallback((time: moment.Moment) => setTime(time), []);
-  const onOkClick = useCallback(() => onConfirmClick(time.tz(BASE_TIMEZONE).format()), [time, onConfirmClick]);
+  const onTimeSelect = useCallback((time: Moment) => setTime(time), []);
+  const onOkClick = useCallback(() => onConfirmClick(time.tz(BASE_TIMEZONE).format()), [
+    time,
+    onConfirmClick,
+  ]);
 
   useEffect(() => {
     setTime(momentTimeZone.tz(defaultDateTime, defaultTimeZone));
-  }, []);
+  }, [defaultDateTime, defaultTimeZone]);
 
   useEffect(() => {
     if (prevTimeZone === timeZone) {

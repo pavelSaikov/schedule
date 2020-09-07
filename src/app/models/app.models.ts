@@ -74,7 +74,10 @@ export interface IDescriptionPageContentPermissions {
   isMapAvailable: boolean;
 }
 
-export const TaskNameDescriptionPageContentPermissionsMap = new Map<EventName, IDescriptionPageContentPermissions>([
+export const TaskNameDescriptionPageContentPermissionsMap = new Map<
+  EventName,
+  IDescriptionPageContentPermissions
+>([
   [EventName.codewars, { isVideosAvailable: false, isPhotosAvailable: false, isMapAvailable: false }],
   [EventName.test, { isVideosAvailable: false, isPhotosAvailable: false, isMapAvailable: false }],
   [EventName.jsTask, { isVideosAvailable: true, isPhotosAvailable: true, isMapAvailable: false }],
@@ -99,6 +102,7 @@ export interface ITableRowInfo {
   organizer: string;
 }
 
+// Modify config of 'moment-timezone-data plugin' in 'webpack.config.js' file, if you add or remove timezones
 export enum TimeZone {
   europeLondon = 'Europe/London',
   europeWarsaw = 'Europe/Warsaw',

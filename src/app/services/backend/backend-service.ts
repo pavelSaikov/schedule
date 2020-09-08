@@ -1,4 +1,5 @@
 import { IEvent, IEventCategory, ILinkWithDescription } from '../../models/app.models';
+import { ICoordinates } from '../../pages/description/components/map/map.models';
 import {
   IBackendEvent,
   IBackendEventCategory,
@@ -28,7 +29,7 @@ class BackendService {
       feedbacks: JSON.parse(backendEvent.feedbacks) as string[],
       isQuestionFormAvailable: JSON.parse(backendEvent.isQuestionFormAvailable) as boolean,
       questions: JSON.parse(backendEvent.questions) as string[],
-      mapCoordinates: JSON.parse(backendEvent.mapCoordinates) as number[],
+      mapCoordinates: JSON.parse(backendEvent.mapCoordinates) as ICoordinates,
     };
   }
 
@@ -51,7 +52,9 @@ class BackendService {
     };
   }
 
-  private parseBackendEventCategoryToAppEventCategory(backendEventCategory: IBackendEventCategory): IEventCategory {
+  private parseBackendEventCategoryToAppEventCategory(
+    backendEventCategory: IBackendEventCategory,
+  ): IEventCategory {
     return {
       id: backendEventCategory.id,
       categoryName: backendEventCategory.categoryName,
@@ -60,7 +63,9 @@ class BackendService {
     };
   }
 
-  private parseAppEventCategoryToBackendEventCategory(appEventCategory: IEventCategory): IBackendEventCategory {
+  private parseAppEventCategoryToBackendEventCategory(
+    appEventCategory: IEventCategory,
+  ): IBackendEventCategory {
     return { ...appEventCategory, name: '' };
   }
 
@@ -159,7 +164,9 @@ class BackendService {
   }
 
   public addEventCategory(eventCategory: IEventCategory, abortController: AbortController): void {
-    const backendEventCategory: IBackendEventCategory = this.parseAppEventCategoryToBackendEventCategory(eventCategory);
+    const backendEventCategory: IBackendEventCategory = this.parseAppEventCategoryToBackendEventCategory(
+      eventCategory,
+    );
 
     fetch(`${this.endpoint}/team/${this.teamId}/organizer`, {
       method: 'POST',
@@ -173,7 +180,9 @@ class BackendService {
   }
 
   public updateEventCategory(eventCategory: IEventCategory, abortController: AbortController): void {
-    const backendEventCategory: IBackendEventCategory = this.parseAppEventCategoryToBackendEventCategory(eventCategory);
+    const backendEventCategory: IBackendEventCategory = this.parseAppEventCategoryToBackendEventCategory(
+      eventCategory,
+    );
 
     fetch(`${this.endpoint}/team/${this.teamId}/organizer/${eventCategory.id}`, {
       method: 'PUT',

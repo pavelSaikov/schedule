@@ -21,12 +21,12 @@ export const CommonHeader: FC = () => {
       }
       dispatch(setTimeZone({ payload: value }));
     },
-    [timeZone],
+    [dispatch, timeZone],
   );
 
   const onModeChange = useCallback(
     (checked: boolean) => dispatch(setAppMode({ payload: checked ? AppMode.mentor : AppMode.student })),
-    [],
+    [dispatch],
   );
 
   return (

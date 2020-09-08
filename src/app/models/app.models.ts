@@ -1,3 +1,5 @@
+import { ICoordinates } from '../pages/description/components/map/map.models';
+
 export enum EventName {
   jsTask = 'js task',
   test = 'test',
@@ -65,7 +67,7 @@ export interface IEvent {
   feedbacks: string[];
   isQuestionFormAvailable: boolean;
   questions: string[];
-  mapCoordinates: number[];
+  mapCoordinates: ICoordinates;
 }
 
 export interface IDescriptionPageContentPermissions {

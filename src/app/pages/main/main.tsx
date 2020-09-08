@@ -22,6 +22,8 @@ export const MainPage: FC = () => {
       case ScheduleMode.calendar:
         return <CalendarSchedule />;
     }
+
+    return <TableSchedule />;
   }, [scheduleMode]);
 
   return (

@@ -10,7 +10,7 @@ export const ScheduleNavigation: FC = () => {
   const scheduleMode: ScheduleMode = useSelector(scheduleModeSelector);
   const dispatch = useDispatch();
 
-  const onMenuItemClick = useCallback(e => dispatch(setScheduleMode({ payload: e.key })), []);
+  const onMenuItemClick = useCallback(e => dispatch(setScheduleMode({ payload: e.key })), [dispatch]);
 
   return (
     <div>

@@ -3,6 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 const currentYear = new Date().getFullYear();
+require('dotenv').config();
+const webpack = require('webpack');
 
 module.exports = envOptions => {
   const mode = envOptions && envOptions.production ? 'production' : 'development';
@@ -62,6 +64,9 @@ module.exports = envOptions => {
         ],
         startYear: currentYear - 10,
         endYear: currentYear + 10,
+      }),
+      new webpack.DefinePlugin({
+        MAP_API_KEY: JSON.stringify(process.env.MAP_API_KEY),
       }),
     ],
     devtool: 'source-map',

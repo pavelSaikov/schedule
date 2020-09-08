@@ -2,7 +2,7 @@ import { Input } from 'antd';
 import Form, { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import Modal from 'antd/lib/modal/Modal';
-import React, { useCallback, FC } from 'react';
+import React, { useCallback, useEffect, FC } from 'react';
 
 import { ILinkWithDescription } from '../../../../models/app.models';
 
@@ -20,6 +20,11 @@ export const LinkEditor: FC<ILinkEditor> = ({
   onCancelClick,
 }) => {
   const [form] = useForm();
+
+  useEffect(() => form.setFieldsValue({ ...linkWithDescription } || { linkDescription: '', url: '' }), [
+    form,
+    linkWithDescription,
+  ]);
 
   const onSubmit = useCallback(() => {
     form
@@ -44,12 +49,9 @@ export const LinkEditor: FC<ILinkEditor> = ({
       okText={'Submit'}
       onCancel={onCancel}
       onOk={onSubmit}
+      forceRender
     >
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={{ linkDescription: linkWithDescription.linkDescription, url: linkWithDescription.url }}
-      >
+      <Form form={form} layout="vertical">
         <FormItem
           name="linkDescription"
           label="Link Description"

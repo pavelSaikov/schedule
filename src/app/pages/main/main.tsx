@@ -3,7 +3,7 @@ import './main.scss';
 import React, { useEffect, useMemo, useState, FC } from 'react';
 import { useSelector } from 'react-redux';
 
-import { timeZoneSelector } from '../../components/header/store/header.selectors';
+import { timeZoneSelector } from '../../common/components/header/store/header.selectors';
 import { IEvent, IEventCategory, ScheduleMode, TimeZone } from '../../models/app.models';
 import { eventsSelector, eventCategoriesSelector } from '../../store/app.selectors';
 import { CalendarSchedule } from './components/calendar-schedule/calendar-schedule';

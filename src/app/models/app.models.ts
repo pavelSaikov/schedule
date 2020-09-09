@@ -9,6 +9,15 @@ export enum EventName {
   meetup = 'meetup',
 }
 
+export const EventNames: EventName[] = [
+  EventName.jsTask,
+  EventName.test,
+  EventName.codewars,
+  EventName.lecture,
+  EventName.interview,
+  EventName.meetup,
+];
+
 export enum RowCategoryName {
   jsTask = 'js task',
   test = 'test',

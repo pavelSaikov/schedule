@@ -1,5 +1,5 @@
-import { AppMode, TimeZone } from '../../../models/app.models';
-import { IAction } from '../../../store/index';
+import { AppMode, TimeZone } from '../../../../models/app.models';
+import { IAction } from '../../../../store/index';
 import { setAppMode, setTimeZone } from './header.actions';
 
 export interface IHeaderState {

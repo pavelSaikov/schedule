@@ -1,0 +1,11 @@
+.name-cell_wrapper {
+  display: flex;
+  align-items: center;
+}
+.name-cell_name {
+  margin-right: 7px;
+  text-overflow: ellipsis;
+}
+.name-cell_edit-icon {
+  cursor: pointer;
+}

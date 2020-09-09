@@ -1,0 +1,24 @@
+.organizer_gitLink {
+  visibility: hidden;
+}
+
+.organizer_name {
+  margin-right: 7px;
+}
+
+.organizer-cell_wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.organizer-cell_wrapper:hover {
+  width: fit-content;
+
+  .organizer_gitLink {
+    visibility: visible;
+  }
+}
+
+.organizer_edit-icon {
+  cursor: pointer;
+}

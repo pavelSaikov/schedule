@@ -1,0 +1,21 @@
+.broadcast-url_wrapper {
+  display: flex;
+  align-items: center;
+  & .ant-anchor-link{
+    padding:0;
+  }
+  & .ant-anchor-wrapper {
+    margin-right: 7px;
+    margin-left: -7px;
+  }
+  & .ant-anchor-ink::before{
+    display: none;
+  }
+}
+
+
+
+.broadcast-url-cell_edit-icon {
+  cursor: pointer;
+}
+

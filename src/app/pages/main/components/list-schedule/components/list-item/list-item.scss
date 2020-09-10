@@ -1,0 +1,33 @@
+@mixin flex($justify-content, $align-items: normal, $flex-wrap: nowrap) {
+  display: flex;
+  justify-content: $justify-content;
+  align-items: $align-items;
+  flex-wrap: $flex-wrap;
+}
+
+.list-item_wrapper {
+  padding: 10px;
+  max-width: 700px;
+}
+
+.list-item_header-container {
+  @include flex(space-between, center);
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+
+  .list-item_header {
+    margin: 0 10px 0 0 !important;
+  }
+}
+
+.list-item_title-container {
+  @include flex(space-between, center);
+}
+
+.list-item_description {
+  margin: 20px 0;
+}
+
+.list-item_footer-container {
+  @include flex(space-between, center);
+}

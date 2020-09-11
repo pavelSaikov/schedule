@@ -1,0 +1,9 @@
+.name-cell_wrapper {
+  display: flex;
+  align-items: center;
+
+  & .ant-typography, .ant-typography p{
+    margin-bottom:0;
+  }
+}
+

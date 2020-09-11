@@ -3,13 +3,10 @@ import './main.scss';
 import React, { useEffect, useMemo, useState, FC } from 'react';
 import { useSelector } from 'react-redux';
 
-import { timeZoneSelector } from '../../common/components/header/store/header.selectors';
+import { timeZoneSelector } from '../../common/components/common-header/store/common-header.selectors';
 import { IEvent, IEventCategory, ScheduleMode, TimeZone } from '../../models/app.models';
 import { eventsSelector, eventCategoriesSelector } from '../../store/app.selectors';
-import { CalendarSchedule } from './components/calendar-schedule/calendar-schedule';
-import { ListSchedule } from './components/list-schedule/list-schedule';
-import { ScheduleNavigation } from './components/schedule-navigation/schedule-navigation';
-import { TableSchedule } from './components/table-schedule/table-schedule';
+import { CalendarSchedule, ListSchedule, ScheduleNavigation, TableSchedule } from './components';
 import { sortEventsByDate } from './main.models';
 import { scheduleModeSelector } from './store/main.selectors';
 
@@ -35,7 +32,14 @@ export const MainPage: FC = () => {
       case ScheduleMode.table:
         return <TableSchedule />;
       case ScheduleMode.list:
-        return <ListSchedule />;
+        return (
+          <ListSchedule
+            events={events}
+            eventCategories={eventCategories}
+            timeZone={timeZone}
+            onMoreClick={(id: string) => console.log('id:', id)}
+          />
+        );
       case ScheduleMode.calendar:
         return <CalendarSchedule events={events} eventCategories={eventCategories} timeZone={timeZone} />;
       default:

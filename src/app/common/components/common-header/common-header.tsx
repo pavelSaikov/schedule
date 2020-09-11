@@ -1,23 +1,27 @@
-import './header.scss';
+import './common-header.scss';
 
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Select, Switch } from 'antd';
-import React, { useCallback, useState, FC } from 'react';
+import React, { useCallback, useEffect, useRef, useState, FC, MutableRefObject } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { AppMode, IEventCategory, TimeZone, TimeZones } from '../../../models/app.models';
 import { eventCategoriesSelector } from '../../../store/app.selectors';
-import { ModalWindow } from '../colors-editor/colors-editor';
-import { setAppMode, setTimeZone } from './store/header.actions';
-import { appModeSelector, timeZoneSelector } from './store/header.selectors';
+import { setAppMode, setTimeZone } from './store/common-header.actions';
+import { appModeSelector, timeZoneSelector } from './store/common-header.selectors';
+import { uploadEventCategories } from './store/common-header.thunks';
+import { ColorsEditor } from '..';
 
 export const CommonHeader: FC = () => {
+  const dispatch = useDispatch();
   const mode: AppMode = useSelector(appModeSelector);
   const timeZone: TimeZone = useSelector(timeZoneSelector);
   const eventCategories: IEventCategory[] = useSelector(eventCategoriesSelector);
-  const dispatch = useDispatch();
 
   const [isColorsEditorOpen, setIsColorsEditorOpen] = useState(false);
+  const abortControllerRef: MutableRefObject<AbortController> = useRef();
+
+  useEffect(() => () => (abortControllerRef.current ? abortControllerRef.current.abort() : null), []);
 
   const onTimeZoneChange = useCallback(
     (value: TimeZone) => {
@@ -35,6 +39,20 @@ export const CommonHeader: FC = () => {
   );
 
   const onEditColors = useCallback(() => setIsColorsEditorOpen(true), []);
+
+  const onModalOk = useCallback(
+    (eventCategories: IEventCategory[]) => {
+      setIsColorsEditorOpen(false);
+
+      abortControllerRef.current ? abortControllerRef.current.abort() : null;
+
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
+      dispatch(uploadEventCategories(eventCategories, abortController));
+    },
+    [dispatch],
+  );
 
   return (
     timeZone && (
@@ -58,16 +76,13 @@ export const CommonHeader: FC = () => {
           defaultChecked={mode === AppMode.mentor}
           onChange={onModeChange}
         />
-        <ModalWindow
+        <ColorsEditor
           defaultEventCategories={eventCategories}
           currentEventCategory={eventCategories[0]}
           isVisible={isColorsEditorOpen}
+          isUserCanAddNewCategories={false}
           onCancelClick={() => setIsColorsEditorOpen(false)}
-          onOkClick={(eventCategories: IEventCategory[], selectedCategory: IEventCategory) => {
-            setIsColorsEditorOpen(false);
-            console.log('Event categories', eventCategories);
-            console.log('selected category', selectedCategory);
-          }}
+          onOkClick={onModalOk}
         />
       </div>
     )

@@ -56,7 +56,6 @@ export const CalendarSchedule: FC<ICalendarSchedule> = ({ events, timeZone, even
 
   const renderListItem = useCallback(
     (calendarEvent: ICalendarEvent) => {
-      console.log(calendarEvent.eventCategoryName);
       const { backgroundColor, textColor } = eventCategories.find(
         c => c.categoryName === calendarEvent.eventCategoryName,
       );

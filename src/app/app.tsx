@@ -6,11 +6,11 @@ import React, { useEffect, useState, FC } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 
-import { CommonHeader } from './common/components/header/header';
 import { DescriptionPage } from './pages/description/description';
 import { MainPage } from './pages/main/main';
 import { AppRoutes } from './routes/routes';
 import { loadData } from './store/app.thunks';
+import { CommonHeader } from './common/components';
 
 export const App: FC = () => {
   const dispatch = useDispatch();

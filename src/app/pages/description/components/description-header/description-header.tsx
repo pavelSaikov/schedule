@@ -2,32 +2,35 @@ import './description-header.scss';
 
 import { EditOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
-import Modal from 'antd/lib/modal/Modal';
-import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
-import React, { useCallback, useState, FC } from 'react';
+import cloneDeep from 'lodash.clonedeep';
+import React, { useCallback, useState, FC, useEffect } from 'react';
 
-import { Tag } from '../../../../common/components/tag/tag';
+import { ColorsEditor, Tag } from '../../../../common/components';
 import { AppMode, IEventCategory } from '../../../../models/app.models';
 
 interface IDescriptionHeader {
   appMode: AppMode;
   defaultTitle: string;
   defaultEventCategory: IEventCategory;
+  availableEventCategories: IEventCategory[];
   onTitleEdit: (newTitle: string) => void;
-  onEventCategoryEdit: (newEventCategory: IEventCategory) => void;
+  onEventCategoryEdit: (otherEventCategories: IEventCategory[], taskEventCategory: IEventCategory) => void;
 }
 
 export const DescriptionHeader: FC<IDescriptionHeader> = ({
   appMode,
   defaultTitle,
   defaultEventCategory,
+  availableEventCategories,
   onTitleEdit,
   onEventCategoryEdit,
 }) => {
   const [title, setTitle] = useState(defaultTitle);
-  const [eventCategory] = useState<IEventCategory>(defaultEventCategory);
+  const [eventCategory, setEventCategory] = useState<IEventCategory>(defaultEventCategory);
   const [isCategoryEditorVisible, setIsCategoryEditorVisible] = useState(false);
+
+  useEffect(() => setEventCategory(defaultEventCategory), [defaultEventCategory]);
 
   const onTitleChange = useCallback(
     (newTitle: string) => {
@@ -37,13 +40,20 @@ export const DescriptionHeader: FC<IDescriptionHeader> = ({
     [onTitleEdit],
   );
 
-  // TODO
   const onEditEventCategory = useCallback(() => {
     setIsCategoryEditorVisible(true);
-    onEventCategoryEdit(null);
-  }, [onEventCategoryEdit]);
+  }, []);
 
   const onCancel = useCallback(() => setIsCategoryEditorVisible(false), []);
+
+  const onOkClick = useCallback(
+    (updatedEventCategories: IEventCategory[], selectedEventCategory: IEventCategory) => {
+      setIsCategoryEditorVisible(false);
+      setEventCategory({ ...selectedEventCategory });
+      onEventCategoryEdit(cloneDeep(updatedEventCategories), { ...selectedEventCategory });
+    },
+    [onEventCategoryEdit],
+  );
 
   return (
     <div className="description-header_header-container">
@@ -67,10 +77,14 @@ export const DescriptionHeader: FC<IDescriptionHeader> = ({
           </Tooltip>
         )}
       </div>
-      {/* TODO */}
-      <Modal centered visible={isCategoryEditorVisible} onCancel={onCancel} onOk={onEditEventCategory}>
-        <Text>{eventCategory.backgroundColor}</Text>
-      </Modal>
+      <ColorsEditor
+        isUserCanAddNewCategories={true}
+        defaultEventCategories={availableEventCategories}
+        currentEventCategory={defaultEventCategory}
+        onCancelClick={onCancel}
+        onOkClick={onOkClick}
+        isVisible={isCategoryEditorVisible}
+      />
     </div>
   );
 };

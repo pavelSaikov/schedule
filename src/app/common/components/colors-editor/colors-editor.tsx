@@ -4,7 +4,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, Divider, Input, Modal, Radio, Select, Space } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import cloneDeep from 'lodash.clonedeep';
-import React, { useCallback, useState, FC } from 'react';
+import React, { useCallback, useState, FC, useEffect } from 'react';
 import { TwitterPicker } from 'react-color';
 
 import { IEventCategory } from '../../../models/app.models';
@@ -18,18 +18,20 @@ enum RadioBtn {
   text = 'Text',
 }
 
-interface ColorsEditor {
+interface IColorsEditor {
   defaultEventCategories: IEventCategory[];
   currentEventCategory: IEventCategory;
   isVisible: boolean;
+  isUserCanAddNewCategories: boolean;
   onOkClick: (eventCategories: IEventCategory[], selectedEventCategory: IEventCategory) => void;
   onCancelClick: () => void;
 }
 
-export const ModalWindow: FC<ColorsEditor> = ({
+export const ColorsEditor: FC<IColorsEditor> = ({
   defaultEventCategories,
   currentEventCategory,
   isVisible,
+  isUserCanAddNewCategories,
   onOkClick,
   onCancelClick,
 }) => {
@@ -40,6 +42,16 @@ export const ModalWindow: FC<ColorsEditor> = ({
   const [eventCategories, setEventCategories] = useState<IEventCategory[]>(defaultEventCategories);
   const [isVisibleColorPicker, setIsVisibleColorPicker] = useState<boolean>(false);
   const [radioButtonVal, setRadioButtonVal] = useState<RadioBtn>(RadioBtn.background);
+
+  useEffect(() => {
+    setEventCategories(defaultEventCategories);
+    const selectedEventCategory = {
+      ...defaultEventCategories.find(e => e.categoryName === selectedCategoryName),
+    };
+
+    setBtnBgnColor(selectedEventCategory.backgroundColor);
+    setBtnTextColor(selectedEventCategory.textColor);
+  }, [defaultEventCategories, selectedCategoryName]);
 
   const onChangeRadioButton = useCallback((e: RadioChangeEvent) => setRadioButtonVal(e.target.value), []);
 
@@ -63,7 +75,7 @@ export const ModalWindow: FC<ColorsEditor> = ({
 
   const onOk = useCallback(
     () =>
-      onOkClick(eventCategories, { ...eventCategories.find(e => (e.categoryName = selectedCategoryName)) }),
+      onOkClick(eventCategories, { ...eventCategories.find(e => e.categoryName === selectedCategoryName) }),
     [eventCategories, onOkClick, selectedCategoryName],
   );
 
@@ -106,7 +118,7 @@ export const ModalWindow: FC<ColorsEditor> = ({
   );
 
   return (
-    <Modal title="Task category editor" visible={isVisible} onOk={onOk} onCancel={onCancel}>
+    <Modal centered title="Task category editor" visible={isVisible} onOk={onOk} onCancel={onCancel}>
       <Space direction={'vertical'} size={'middle'}>
         <Select
           className="modalWindow_Select"
@@ -116,13 +128,18 @@ export const ModalWindow: FC<ColorsEditor> = ({
           dropdownRender={menu => (
             <div>
               {menu}
-              <Divider className="modalWindow_Select_Divider" />
-              <div className="modalWindow_InputContainer">
-                <Input className="modalWindow_Input" value={newCategory} onChange={changeNewCategory} />
-                <a className="modalWindow_addItemBtn" onClick={addNewCategory}>
-                  <PlusOutlined /> Add item
-                </a>
-              </div>
+
+              {isUserCanAddNewCategories && (
+                <>
+                  <Divider className="modalWindow_Select_Divider" />
+                  <div className="modalWindow_InputContainer">
+                    <Input className="modalWindow_Input" value={newCategory} onChange={changeNewCategory} />
+                    <a className="modalWindow_addItemBtn" onClick={addNewCategory}>
+                      <PlusOutlined /> Add item
+                    </a>
+                  </div>
+                </>
+              )}
             </div>
           )}
         >

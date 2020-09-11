@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-
 import { useSelector } from 'react-redux';
+
 import {
   appModeSelector,
   timeZoneSelector,
-} from '../../../../common/components/header/store/header.selectors';
+} from '../../../../common/components/common-header/store/common-header.selectors';
 import { AppMode, TimeZone } from '../../../../models/app.models';
 import { DateCell } from './components/date-cell/date-cell';
 import { TimeCell } from './components/time-cell/time-cell';

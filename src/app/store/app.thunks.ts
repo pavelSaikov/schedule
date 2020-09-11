@@ -1,5 +1,5 @@
 import { IEvent, IEventCategory } from '../models/app.models';
-import { backendService } from '../services/backend/backend-service';
+import { backendService } from '../services';
 import { setEvents, setEventCategories } from './app.actions';
 
 export const loadData = (

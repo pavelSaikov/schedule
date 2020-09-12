@@ -29,7 +29,6 @@ export const App: FC = () => {
       {isDataLoad && (
         <>
           <CommonHeader />
-
           <BrowserRouter>
             <Switch>
               <Route exact path={`/${AppRoutes.main}`} component={MainPage} />

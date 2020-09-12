@@ -1,0 +1,16 @@
+.video-list_wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.video-list_carousel {
+  width: 608px;
+  max-width: 608px;
+}
+
+.video-list_button {
+  width: 100px;
+  margin-top: 20px;
+  align-self: flex-start;
+}

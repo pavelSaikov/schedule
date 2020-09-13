@@ -1,0 +1,41 @@
+.photoList_slide {
+  position: relative;
+  cursor: pointer;
+
+  & img {
+    height: 100%;
+    width: auto;
+  }
+}
+
+.photoList_slider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.photoList_arrow {
+  font-size: 30px;
+}
+
+.photoList_carousel {
+  width: 608px;
+}
+
+.photoList_photo--size {
+  width: 120px;
+  height: 120px;
+}
+
+.photoList_photo {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.photoList_deleteIcon {
+  position: absolute;
+  font-size: 20px;
+  top: 0px;
+  left: 100px;
+}

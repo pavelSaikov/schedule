@@ -36,6 +36,8 @@ import { ICoordinates } from './components/map/map.models';
 import { UserFeedbackForm } from './components/user-feedback-form/user-feedback-form';
 import { uploadUpdatedEvent } from './store/description.thunks';
 import { QuestionForm } from './components/question-form/question-form';
+import { PhotoList } from './components/photo-list/photo-list';
+import { AddPhotoModal } from './components/add-photo-modal/add-photo-modal';
 
 export const DescriptionPage: FC = () => {
   const { id } = useParams();
@@ -57,6 +59,7 @@ export const DescriptionPage: FC = () => {
   const [description, setDescription] = useState<string>();
   const [links, setLinks] = useState<ILinkWithDescription[]>();
   const [videos, setVideos] = useState<string[]>();
+  const [photos, setPhotos] = useState<string[]>();
   const [coordinates, setCoordinates] = useState<ICoordinates>();
   const [isFeedbackAvailable, setIsFeedbackAvailable] = useState<boolean>();
   const [, setFeedbacks] = useState<string[]>();
@@ -67,6 +70,7 @@ export const DescriptionPage: FC = () => {
 
   const [isOrganizerModalVisible, setIsOrganizerModalVisible] = useState(false);
   const [isVideoModalVisible, setIsVideoModalVisible] = useState(false);
+  const [isPhotoModalVisible, setIsPhotoModalVisible] = useState(false);
 
   const eventCategoriesAbortControllerRef: MutableRefObject<AbortController> = useRef<AbortController>();
   const eventAbortControllerRef: MutableRefObject<AbortController> = useRef<AbortController>();
@@ -115,6 +119,7 @@ export const DescriptionPage: FC = () => {
     setDescription(event.description);
     setLinks(cloneDeep(event.links));
     setVideos(cloneDeep(event.videos));
+    setPhotos(cloneDeep(event.images));
     setCoordinates(cloneDeep(event.mapCoordinates));
     setIsFeedbackAvailable(event.isFeedbackAvailable);
     setFeedbacks(cloneDeep(event.feedbacks));
@@ -268,7 +273,6 @@ export const DescriptionPage: FC = () => {
     if (!videos || !eventCategory) {
       return null;
     }
-
     const isAnyVideos: boolean = videos.length ? true : false;
     const isPermissionsEnough: boolean = eventCategory.permissions.isVideosAvailable;
     const isMentorMode: boolean = appMode === AppMode.mentor;
@@ -285,6 +289,53 @@ export const DescriptionPage: FC = () => {
       </>
     ) : null;
   }, [appMode, eventCategory, onOpenVideoModal, onRemoveVideo, videos]);
+
+  const onOpenPhotoModal = useCallback(() => setIsPhotoModalVisible(true), []);
+  const onClosePhotoModal = useCallback(() => setIsPhotoModalVisible(false), []);
+  const onRemovePhoto = useCallback(
+    (url: string) =>
+      setPhotos(oldPhotos => {
+        const newPhotos = oldPhotos.filter(v => v !== url);
+        updatedEventRef.current.images = cloneDeep(newPhotos);
+        uploadEvent();
+        return newPhotos;
+      }),
+    [uploadEvent],
+  );
+
+  const onAddNewPhoto = useCallback(
+    (url: string) => {
+      setPhotos(oldPhotos => {
+        const newPhotos = [...oldPhotos, url];
+        updatedEventRef.current.images = cloneDeep(newPhotos);
+        uploadEvent();
+        return newPhotos;
+      });
+      setIsPhotoModalVisible(false);
+    },
+    [uploadEvent],
+  );
+
+  const photosComponent = useMemo(() => {
+    if (!photos || !eventCategory) {
+      return null;
+    }
+    const isAnyPhotos: boolean = photos.length ? true : false;
+    const isPermissionsEnough: boolean = eventCategory.permissions.isPhotosAvailable;
+    const isMentorMode: boolean = appMode === AppMode.mentor;
+
+    return isPermissionsEnough && (isMentorMode || isAnyPhotos) ? (
+      <>
+        <Divider orientation="left">Photos</Divider>
+        <PhotoList
+          photoUrls={photos}
+          appMode={appMode}
+          onRemovePhotoClick={onRemovePhoto}
+          onAddPhotoClick={onOpenPhotoModal}
+        />
+      </>
+    ) : null;
+  }, [appMode, eventCategory, onOpenPhotoModal, onRemovePhoto, photos]);
 
   const onCoordinatesChange = useCallback(
     (coordinates: ICoordinates) => {
@@ -457,6 +508,7 @@ export const DescriptionPage: FC = () => {
                 />
                 {linksComponent}
                 {videosComponent}
+                {photosComponent}
                 {mapComponent}
                 {feedbackComponent}
                 {questionFormComponent}
@@ -472,6 +524,11 @@ export const DescriptionPage: FC = () => {
               onAddVideo={onAddNewVideo}
               visible={isVideoModalVisible}
               onCancelClick={onCloseVideoModal}
+            />
+            <AddPhotoModal
+              onAddPhoto={onAddNewPhoto}
+              visible={isPhotoModalVisible}
+              onCancelClick={onClosePhotoModal}
             />
           </>
         )}

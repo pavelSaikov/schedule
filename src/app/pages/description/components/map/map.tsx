@@ -74,7 +74,10 @@ export const Map: FC<IMap> = ({ markerCoordinates, appMode, onCoordinatesChange 
     isMarkerVisible ? marker.addTo(mapRef.current) : marker.remove();
   }, [isMarkerVisible, marker]);
 
-  const onRemoveMarker = useCallback(() => setIsMarkerVisible(false), []);
+  const onRemoveMarker = useCallback(() => {
+    setIsMarkerVisible(false);
+    onCoordinatesChange(null);
+  }, [onCoordinatesChange]);
 
   const onAddMarker = useCallback(() => {
     setIsMarkerVisible(true);

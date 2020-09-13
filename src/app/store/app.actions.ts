@@ -3,3 +3,4 @@ import { createAction } from './create-action';
 
 export const setEventCategories = createAction<IEventCategory[]>('[App] Set Event Categories');
 export const setEvents = createAction<IEvent[]>('[App] Set Events');
+export const updateEvent = createAction<IEvent>('[App] Update Event');

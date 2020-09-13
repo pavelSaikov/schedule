@@ -57,6 +57,7 @@ export interface IEventCategory {
   categoryName: string;
   backgroundColor: string;
   textColor: string;
+  permissions: IContentPermissions;
 }
 
 export interface IEvent {
@@ -79,16 +80,13 @@ export interface IEvent {
   mapCoordinates: ICoordinates;
 }
 
-export interface IDescriptionPageContentPermissions {
+export interface IContentPermissions {
   isVideosAvailable: boolean;
   isPhotosAvailable: boolean;
   isMapAvailable: boolean;
 }
 
-export const TaskNameDescriptionPageContentPermissionsMap = new Map<
-  EventName,
-  IDescriptionPageContentPermissions
->([
+export const EventNameContentPermissionsMap = new Map<EventName, IContentPermissions>([
   [EventName.codewars, { isVideosAvailable: false, isPhotosAvailable: false, isMapAvailable: false }],
   [EventName.test, { isVideosAvailable: false, isPhotosAvailable: false, isMapAvailable: false }],
   [EventName.jsTask, { isVideosAvailable: true, isPhotosAvailable: true, isMapAvailable: false }],

@@ -1,6 +1,8 @@
 import './list-item.scss';
 
+import { GithubFilled } from '@ant-design/icons';
 import { Button } from 'antd';
+import Avatar from 'antd/lib/avatar/avatar';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
@@ -48,7 +50,19 @@ export const ListItem: FC<IListItem> = ({ itemInfo, onMoreClick }) => {
         {itemInfo.description}
       </Paragraph>
       <div className="list-item_footer-container">
-        <Text>Organizer Info...</Text>
+        <div className="list-item_cell-wrapper">
+          <a
+            className="list-item_name"
+            href={`https://app.rs.school/profile?githubId=${itemInfo.organizer}`}
+            style={{ color: itemInfo.eventCategory.textColor }}
+          >
+            <Avatar src={`https://github.com/${itemInfo.organizer}.png`} size="small" />
+            {' ' + itemInfo.organizer}
+          </a>
+          <a className="list-item_gitLink" href={`https://github.com/${itemInfo.organizer}`}>
+            <GithubFilled style={{ color: itemInfo.eventCategory.textColor }} />
+          </a>
+        </div>
         <Button type="primary" onClick={onMore}>
           More
         </Button>

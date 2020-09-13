@@ -88,7 +88,6 @@ export const ListSchedule: FC<IListSchedule> = ({ events, eventCategories, timeZ
         return;
       }
 
-      // eslint-disable-next-line consistent-return
       return (
         <VList
           autoHeight
@@ -132,7 +131,6 @@ export const ListSchedule: FC<IListSchedule> = ({ events, eventCategories, timeZ
         return;
       }
 
-      // eslint-disable-next-line consistent-return
       return (
         <InfiniteLoader
           isRowLoaded={isRowLoaded}

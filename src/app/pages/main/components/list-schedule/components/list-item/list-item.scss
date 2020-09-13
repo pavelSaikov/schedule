@@ -32,3 +32,24 @@
 .list-item_footer-container {
   @include flex(space-between, center);
 }
+
+.list-item_gitLink {
+  visibility: hidden;
+}
+
+.list-item_name {
+  margin-right: 7px;
+}
+
+.list-item_cell-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.list-item_cell-wrapper:hover {
+  width: fit-content;
+
+  .list-item_gitLink {
+    visibility: visible;
+  }
+}

@@ -1,10 +1,12 @@
 import './main.scss';
 
-import React, { useEffect, useMemo, useState, FC } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, FC } from 'react';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { timeZoneSelector } from '../../common/components/common-header/store/common-header.selectors';
 import { IEvent, IEventCategory, ScheduleMode, TimeZone } from '../../models/app.models';
+import { AppRoutes } from '../../routes/routes';
 import { eventsSelector, eventCategoriesSelector } from '../../store/app.selectors';
 import { CalendarSchedule, ListSchedule, ScheduleNavigation, TableSchedule } from './components';
 import { sortEventsByDate } from './main.models';
@@ -15,6 +17,8 @@ export const MainPage: FC = () => {
   const timeZone: TimeZone = useSelector(timeZoneSelector);
   const events: IEvent[] = useSelector(eventsSelector);
   const eventCategories: IEventCategory[] = useSelector(eventCategoriesSelector);
+
+  const history = useHistory();
 
   const [isEventsStructured, setIsEventsStructured] = useState(false);
 
@@ -27,6 +31,8 @@ export const MainPage: FC = () => {
     setIsEventsStructured(true);
   }, [events, isEventsStructured]);
 
+  const onMoreClick = useCallback((id: string) => history.push(`/${AppRoutes.description}/${id}`), [history]);
+
   const scheduleView = useMemo(() => {
     switch (scheduleMode) {
       case ScheduleMode.table:
@@ -37,7 +43,7 @@ export const MainPage: FC = () => {
             events={events}
             eventCategories={eventCategories}
             timeZone={timeZone}
-            onMoreClick={(id: string) => console.log('id:', id)}
+            onMoreClick={onMoreClick}
           />
         );
       case ScheduleMode.calendar:
@@ -45,7 +51,7 @@ export const MainPage: FC = () => {
       default:
         return <TableSchedule />;
     }
-  }, [eventCategories, events, scheduleMode, timeZone]);
+  }, [eventCategories, events, onMoreClick, scheduleMode, timeZone]);
 
   return (
     <div className="main_wrapper">

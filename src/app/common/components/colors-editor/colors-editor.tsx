@@ -101,6 +101,7 @@ export const ColorsEditor: FC<IColorsEditor> = ({
       categoryName: newCategory,
       textColor: 'black',
       backgroundColor: 'white',
+      permissions: { isMapAvailable: true, isPhotosAvailable: true, isVideosAvailable: true },
     };
 
     setEventCategories(categories => [{ ...newEventCategory }, ...categories]);

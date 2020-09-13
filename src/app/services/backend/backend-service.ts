@@ -60,13 +60,14 @@ class BackendService {
       categoryName: backendEventCategory.categoryName,
       backgroundColor: backendEventCategory.backgroundColor,
       textColor: backendEventCategory.textColor,
+      permissions: JSON.parse(backendEventCategory.permissions),
     };
   }
 
   private parseAppEventCategoryToBackendEventCategory(
     appEventCategory: IEventCategory,
   ): IBackendEventCategory {
-    return { ...appEventCategory, name: '' };
+    return { ...appEventCategory, name: '', permissions: JSON.stringify(appEventCategory.permissions) };
   }
 
   public getAllEvents(abortController: AbortController): Promise<IEvent[]> {
@@ -95,10 +96,10 @@ class BackendService {
       .then((response: IBackendEvent) => this.parseBackendEventToAppEvent(response));
   }
 
-  public addEvent(event: IEvent, abortController: AbortController): void {
+  public addEvent(event: IEvent, abortController: AbortController): Promise<Response> {
     const backendEvent: IBackendEvent = this.parseAppEventToBackendEvent(event);
 
-    fetch(`${this.endpoint}/team/${this.teamId}/event`, {
+    return fetch(`${this.endpoint}/team/${this.teamId}/event`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -109,10 +110,10 @@ class BackendService {
     });
   }
 
-  public updateEvent(event: IEvent, abortController: AbortController): void {
+  public updateEvent(event: IEvent, abortController: AbortController): Promise<Response> {
     const backendEvent: IBackendEvent = this.parseAppEventToBackendEvent(event);
 
-    fetch(`${this.endpoint}/team/${this.teamId}/event/${event.id}`, {
+    return fetch(`${this.endpoint}/team/${this.teamId}/event/${event.id}`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
@@ -123,8 +124,8 @@ class BackendService {
     });
   }
 
-  public deleteEvent(eventId: string, abortController: AbortController): void {
-    fetch(`${this.endpoint}/team/${this.teamId}/event/${eventId}`, {
+  public deleteEvent(eventId: string, abortController: AbortController): Promise<Response> {
+    return fetch(`${this.endpoint}/team/${this.teamId}/event/${eventId}`, {
       method: 'Delete',
       headers: {
         Accept: 'application/json',
@@ -163,12 +164,15 @@ class BackendService {
       .then((response: IBackendEventCategory) => this.parseBackendEventCategoryToAppEventCategory(response));
   }
 
-  public addEventCategory(eventCategory: IEventCategory, abortController: AbortController): void {
+  public addEventCategory(
+    eventCategory: IEventCategory,
+    abortController: AbortController,
+  ): Promise<Response> {
     const backendEventCategory: IBackendEventCategory = this.parseAppEventCategoryToBackendEventCategory(
       eventCategory,
     );
 
-    fetch(`${this.endpoint}/team/${this.teamId}/organizer`, {
+    return fetch(`${this.endpoint}/team/${this.teamId}/organizer`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -179,12 +183,15 @@ class BackendService {
     });
   }
 
-  public updateEventCategory(eventCategory: IEventCategory, abortController: AbortController): void {
+  public updateEventCategory(
+    eventCategory: IEventCategory,
+    abortController: AbortController,
+  ): Promise<Response> {
     const backendEventCategory: IBackendEventCategory = this.parseAppEventCategoryToBackendEventCategory(
       eventCategory,
     );
 
-    fetch(`${this.endpoint}/team/${this.teamId}/organizer/${eventCategory.id}`, {
+    return fetch(`${this.endpoint}/team/${this.teamId}/organizer/${eventCategory.id}`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
@@ -195,8 +202,8 @@ class BackendService {
     });
   }
 
-  public deleteEventCategory(eventCategoryId: string, abortController: AbortController): void {
-    fetch(`${this.endpoint}/team/${this.teamId}/organizer/${eventCategoryId}`, {
+  public deleteEventCategory(eventCategoryId: string, abortController: AbortController): Promise<Response> {
+    return fetch(`${this.endpoint}/team/${this.teamId}/organizer/${eventCategoryId}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',

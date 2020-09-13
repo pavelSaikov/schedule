@@ -1,5 +1,3 @@
-import { IEventCategory } from '../../models/app.models';
-
 export interface IBackendEvent {
   id: string;
   eventCategoryName: string;
@@ -29,8 +27,13 @@ export interface IEventsResponse {
   data: IBackendEvent[];
 }
 
-export interface IBackendEventCategory extends IEventCategory {
+export interface IBackendEventCategory {
   name: string;
+  id: string;
+  categoryName: string;
+  backgroundColor: string;
+  textColor: string;
+  permissions: string;
 }
 
 export interface IEventCategoriesResponse {

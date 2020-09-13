@@ -32,7 +32,7 @@ export const App: FC = () => {
           <BrowserRouter>
             <Switch>
               <Route exact path={`/${AppRoutes.main}`} component={MainPage} />
-              <Route path={`/${AppRoutes.description}`} component={DescriptionPage} />
+              <Route path={`/${AppRoutes.description}/:id`} component={DescriptionPage} />
               <Route path={'*'}>
                 <Redirect to={`/${AppRoutes.main}`} />
               </Route>

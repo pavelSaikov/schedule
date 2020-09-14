@@ -102,12 +102,13 @@ export interface IRowCategory {
 }
 
 export interface ITableRowInfo {
-  id: number;
-  rowCategory: IRowCategory;
+  key: number;
+  id: string;
+  eventCategory: IEventCategory;
   title: string;
   comment: string;
   dateTime: string;
-  broadcastLink: string;
+  broadcastUrl: string;
   organizer: string;
 }
 

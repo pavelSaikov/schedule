@@ -34,6 +34,7 @@ import {
 } from './components';
 import { ICoordinates } from './components/map/map.models';
 import { uploadUpdatedEvent } from './store/description.thunks';
+import { UserFeedbackForm } from './components/user-feedback-form/user-feedback-form';
 
 export const DescriptionPage: FC = () => {
   const { id } = useParams();
@@ -56,6 +57,9 @@ export const DescriptionPage: FC = () => {
   const [links, setLinks] = useState<ILinkWithDescription[]>();
   const [videos, setVideos] = useState<string[]>();
   const [coordinates, setCoordinates] = useState<ICoordinates>();
+  const [isFeedbackAvailable, setIsFeedbackAvailable] = useState<boolean>();
+  const [feedbacks, setFeedbacks] = useState<string[]>();
+  const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
 
   const [isOrganizerModalVisible, setIsOrganizerModalVisible] = useState(false);
   const [isVideoModalVisible, setIsVideoModalVisible] = useState(false);
@@ -108,6 +112,8 @@ export const DescriptionPage: FC = () => {
     setLinks(cloneDeep(event.links));
     setVideos(cloneDeep(event.videos));
     setCoordinates(cloneDeep(event.mapCoordinates));
+    setIsFeedbackAvailable(event.isFeedbackAvailable);
+    setFeedbacks(cloneDeep(event.feedbacks));
   }, [event]);
 
   useEffect(
@@ -298,8 +304,54 @@ export const DescriptionPage: FC = () => {
     ) : null;
   }, [appMode, coordinates, eventCategory, onCoordinatesChange]);
 
+  const onChangeFeedbackStatus = useCallback(
+    (status: boolean) => {
+      setIsFeedbackAvailable(status);
+      updatedEventRef.current.isFeedbackAvailable = status;
+      uploadEvent();
+    },
+    [uploadEvent],
+  );
+
+  const onFeedbackSubmit = useCallback(
+    (feedback: string) => {
+      setFeedbacks([...feedbacks, feedback]);
+      setIsFeedbackSubmitted(true);
+      updatedEventRef.current.feedbacks = [...feedbacks, feedback];
+      uploadEvent();
+    },
+    [feedbacks, uploadEvent],
+  );
+
+  const feedbackComponent = useMemo(() => {
+    if (!eventCategory) {
+      return;
+    }
+
+    const isMentorMode: boolean = appMode === AppMode.mentor;
+
+    return isMentorMode || (isFeedbackAvailable && !isFeedbackSubmitted) ? (
+      <>
+        <Divider orientation="left">Feedback form</Divider>
+        <UserFeedbackForm
+          appMode={appMode}
+          isFeedbackEnabled={isFeedbackAvailable}
+          onChangeFeedbackStatus={onChangeFeedbackStatus}
+          onFeedbackSubmit={onFeedbackSubmit}
+        />
+      </>
+    ) : null;
+  }, [
+    appMode,
+    eventCategory,
+    isFeedbackAvailable,
+    isFeedbackSubmitted,
+    onChangeFeedbackStatus,
+    onFeedbackSubmit,
+  ]);
+
   return (
-    <>
+    <div className="description_wrapper">
       {null}
       <Button className="description_back-button" type="primary">
         <Link to={`/${AppRoutes.main}`}>Back</Link>
@@ -346,6 +398,7 @@ export const DescriptionPage: FC = () => {
                 {linksComponent}
                 {videosComponent}
                 {mapComponent}
+                {feedbackComponent}
               </div>
             </div>
             <OrganizerEditor
@@ -361,6 +414,6 @@ export const DescriptionPage: FC = () => {
             />
           </>
         )}
-    </>
+    </div>
   );
 };

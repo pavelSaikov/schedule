@@ -11,6 +11,7 @@ export interface IListItemInfo {
   eventCategory: IEventCategory;
   timeZone: TimeZone;
   id: string;
+  isSelected: boolean;
 }
 
 export const sortListItemsByDate = (li1: IListItemInfo, li2: IListItemInfo): number => {

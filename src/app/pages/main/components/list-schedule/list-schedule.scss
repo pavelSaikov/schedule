@@ -2,7 +2,21 @@
   width: 100%;
 }
 
+.list-schedule_buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 10px;
+
+  & .list-schedule_button {
+    margin-right: 10px;
+  }
+}
+
 .list-schedule_list {
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 30px auto;
+}
+
+.list-schedule_checkbox {
+  margin-right: 24px;
 }

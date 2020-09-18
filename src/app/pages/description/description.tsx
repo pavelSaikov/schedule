@@ -33,8 +33,9 @@ import {
   VideoList,
 } from './components';
 import { ICoordinates } from './components/map/map.models';
-import { uploadUpdatedEvent } from './store/description.thunks';
 import { UserFeedbackForm } from './components/user-feedback-form/user-feedback-form';
+import { uploadUpdatedEvent } from './store/description.thunks';
+import { QuestionForm } from './components/question-form/question-form';
 
 export const DescriptionPage: FC = () => {
   const { id } = useParams();
@@ -58,8 +59,11 @@ export const DescriptionPage: FC = () => {
   const [videos, setVideos] = useState<string[]>();
   const [coordinates, setCoordinates] = useState<ICoordinates>();
   const [isFeedbackAvailable, setIsFeedbackAvailable] = useState<boolean>();
-  const [feedbacks, setFeedbacks] = useState<string[]>();
+  const [, setFeedbacks] = useState<string[]>();
   const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
+  const [isQuestionsAvailable, setIsQuestionFormAvailable] = useState<boolean>();
+  const [, setQuestions] = useState<string[]>();
+  const [isQuestionSubmitted, setIsQuestionSubmitted] = useState(false);
 
   const [isOrganizerModalVisible, setIsOrganizerModalVisible] = useState(false);
   const [isVideoModalVisible, setIsVideoModalVisible] = useState(false);
@@ -114,6 +118,8 @@ export const DescriptionPage: FC = () => {
     setCoordinates(cloneDeep(event.mapCoordinates));
     setIsFeedbackAvailable(event.isFeedbackAvailable);
     setFeedbacks(cloneDeep(event.feedbacks));
+    setIsQuestionFormAvailable(event.isQuestionFormAvailable);
+    setQuestions(event.questions);
   }, [event]);
 
   useEffect(
@@ -170,6 +176,7 @@ export const DescriptionPage: FC = () => {
 
   const onOpenModalForEditingOrganizer = useCallback(() => setIsOrganizerModalVisible(true), []);
   const onCloseModalForEditingOrganizer = useCallback(() => setIsOrganizerModalVisible(false), []);
+
   const onOrganizerEdit = useCallback(
     (newOrganizer: string) => {
       setOrganizer(newOrganizer);
@@ -233,6 +240,7 @@ export const DescriptionPage: FC = () => {
 
   const onOpenVideoModal = useCallback(() => setIsVideoModalVisible(true), []);
   const onCloseVideoModal = useCallback(() => setIsVideoModalVisible(false), []);
+
   const onRemoveVideo = useCallback(
     (url: string) =>
       setVideos(oldVideos => {
@@ -315,12 +323,15 @@ export const DescriptionPage: FC = () => {
 
   const onFeedbackSubmit = useCallback(
     (feedback: string) => {
-      setFeedbacks([...feedbacks, feedback]);
+      setFeedbacks(feedbacks => {
+        const newFeedbacks = [...feedbacks, feedback];
+        updatedEventRef.current.feedbacks = [...feedbacks, feedback];
+        uploadEvent();
+        return newFeedbacks;
+      });
       setIsFeedbackSubmitted(true);
-      updatedEventRef.current.feedbacks = [...feedbacks, feedback];
-      uploadEvent();
     },
-    [feedbacks, uploadEvent],
+    [uploadEvent],
   );
 
   const feedbackComponent = useMemo(() => {
@@ -348,6 +359,55 @@ export const DescriptionPage: FC = () => {
     isFeedbackSubmitted,
     onChangeFeedbackStatus,
     onFeedbackSubmit,
+  ]);
+
+  const onQuestionStatusChange = useCallback(
+    (status: boolean) => {
+      setIsQuestionFormAvailable(status);
+      updatedEventRef.current.isQuestionFormAvailable = status;
+      uploadEvent();
+    },
+    [uploadEvent],
+  );
+
+  const onQuestionSubmit = useCallback(
+    (question: string) => {
+      setIsQuestionSubmitted(true);
+      setQuestions(questions => {
+        const newQuestions = [...questions, question];
+        updatedEventRef.current.questions = [...newQuestions];
+        uploadEvent();
+        return newQuestions;
+      });
+    },
+    [uploadEvent],
+  );
+
+  const questionFormComponent = useMemo(() => {
+    if (!eventCategory) {
+      return;
+    }
+
+    const isMentorMode: boolean = appMode === AppMode.mentor;
+
+    return isMentorMode || (isQuestionsAvailable && !isQuestionSubmitted) ? (
+      <>
+        <Divider orientation="left">Question Form</Divider>
+        <QuestionForm
+          appMode={appMode}
+          isQuestionEnabled={isQuestionsAvailable}
+          onChangeQuestionStatus={onQuestionStatusChange}
+          onQuestionSubmit={onQuestionSubmit}
+        />
+      </>
+    ) : null;
+  }, [
+    appMode,
+    eventCategory,
+    isQuestionSubmitted,
+    isQuestionsAvailable,
+    onQuestionStatusChange,
+    onQuestionSubmit,
   ]);
 
   return (
@@ -399,6 +459,7 @@ export const DescriptionPage: FC = () => {
                 {videosComponent}
                 {mapComponent}
                 {feedbackComponent}
+                {questionFormComponent}
               </div>
             </div>
             <OrganizerEditor

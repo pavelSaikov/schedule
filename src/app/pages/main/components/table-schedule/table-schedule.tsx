@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import {
@@ -9,10 +9,14 @@ import { AppMode, TimeZone } from '../../../../models/app.models';
 import { DateCell } from './components/date-cell/date-cell';
 import { TimeCell } from './components/time-cell/time-cell';
 import { OrganizerCell } from './components/organizer-cell/organizer-cell';
+import { EditDateModal } from './components/edit-date-modal/edit-date-modal';
+import { Button } from 'antd';
 
 export const TableSchedule: FC = () => {
   const timeZone: TimeZone = useSelector(timeZoneSelector);
   const appMode: AppMode = useSelector(appModeSelector);
+
+  const [isVisible, setIsVisible] = useState(false);
 
   return (
     <div>
@@ -38,6 +42,17 @@ export const TableSchedule: FC = () => {
         appMode={appMode}
         onEditClick={() => {
           return;
+        }}
+      />
+      <Button onClick={() => setIsVisible(true)}>Open Modal</Button>
+      <EditDateModal
+        defaultDateTime={'2020-06-01T23:00:00+03:00'}
+        defaultTimeZone={timeZone}
+        visible={isVisible}
+        onCancelClick={() => setIsVisible(false)}
+        onConfirmClick={(date: string) => {
+          console.log(date);
+          setIsVisible(false);
         }}
       />
     </div>

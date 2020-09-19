@@ -1,4 +1,5 @@
-import React, { FC, useState } from 'react';
+import { Button } from 'antd';
+import React, { useState, FC } from 'react';
 import { useSelector } from 'react-redux';
 
 import {
@@ -7,10 +8,9 @@ import {
 } from '../../../../common/components/common-header/store/common-header.selectors';
 import { AppMode, TimeZone } from '../../../../models/app.models';
 import { DateCell } from './components/date-cell/date-cell';
-import { TimeCell } from './components/time-cell/time-cell';
-import { OrganizerCell } from './components/organizer-cell/organizer-cell';
 import { EditDateModal } from './components/edit-date-modal/edit-date-modal';
-import { Button } from 'antd';
+import { OrganizerCell } from './components/organizer-cell/organizer-cell';
+import { TimeCell } from './components/time-cell/time-cell';
 
 export const TableSchedule: FC = () => {
   const timeZone: TimeZone = useSelector(timeZoneSelector);

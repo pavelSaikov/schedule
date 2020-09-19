@@ -25,7 +25,14 @@ export const NameCell: FC<INameCell> = ({ name, appMode, onEditClick }) => {
   return (
     <div className="name-cell_wrapper">
       {
-        <Paragraph ellipsis={true} editable={appMode === AppMode.mentor ? { onChange: onChange } : false}>
+        <Paragraph
+          ellipsis={true}
+          editable={
+            appMode === AppMode.mentor
+              ? { onChange: onChange, maxLength: 70, autoSize: { maxRows: 1, minRows: 1 } }
+              : false
+          }
+        >
           {userName}
         </Paragraph>
       }

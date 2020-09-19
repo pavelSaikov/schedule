@@ -56,7 +56,7 @@ export const EditTimeModal: FC<IEditTimeModal> = ({
           </Select.Option>
         ))}
       </Select>
-      <TimePicker value={time} format="HH:mm" onChange={onTimeSelect} />
+      <TimePicker value={time} format="HH:mm" onChange={onTimeSelect} allowClear={false} showNow={false} />
     </Modal>
   );
 };

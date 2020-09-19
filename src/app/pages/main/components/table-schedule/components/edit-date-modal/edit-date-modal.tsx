@@ -35,7 +35,7 @@ export const EditDateModal: FC<IDateTimeModal> = ({
 
   return (
     <Modal title="Edit Date" visible={visible} onCancel={onCancelClick} onOk={onOkClick} centered>
-      <DatePicker value={date} onChange={onDateSelect} allowClear={false} />
+      <DatePicker value={date} onChange={onDateSelect} allowClear={false} showToday={false} />
     </Modal>
   );
 };

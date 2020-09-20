@@ -7,7 +7,7 @@ import cloneDeep from 'lodash.clonedeep';
 import React, { useCallback, useState, FC, useEffect } from 'react';
 import { TwitterPicker } from 'react-color';
 
-import { IEventCategory } from '../../../models/app.models';
+import { IEventCategory, RowCategoryName } from '../../../models/app.models';
 
 interface IColor {
   hex: string;
@@ -36,7 +36,7 @@ export const ColorsEditor: FC<IColorsEditor> = ({
   onCancelClick,
 }) => {
   const [newCategory, setNewCategory] = useState('');
-  const [selectedCategoryName, setSelectedCategoryName] = useState<string>(currentEventCategory.categoryName);
+  const [selectedCategoryName, setSelectedCategoryName] = useState<string>();
   const [btnBgnColor, setBtnBgnColor] = useState<string>(currentEventCategory.backgroundColor);
   const [btnTextColor, setBtnTextColor] = useState<string>(currentEventCategory.textColor);
   const [eventCategories, setEventCategories] = useState<IEventCategory[]>(defaultEventCategories);
@@ -44,14 +44,31 @@ export const ColorsEditor: FC<IColorsEditor> = ({
   const [radioButtonVal, setRadioButtonVal] = useState<RadioBtn>(RadioBtn.background);
 
   useEffect(() => {
-    setEventCategories(defaultEventCategories);
+    setEventCategories(
+      isUserCanAddNewCategories
+        ? defaultEventCategories.filter(e => e.categoryName !== RowCategoryName.deadline)
+        : defaultEventCategories,
+    );
     const selectedEventCategory = {
-      ...defaultEventCategories.find(e => e.categoryName === selectedCategoryName),
+      ...defaultEventCategories.find(e => e.categoryName === currentEventCategory.categoryName),
     };
 
+    setSelectedCategoryName(currentEventCategory.categoryName);
     setBtnBgnColor(selectedEventCategory.backgroundColor);
     setBtnTextColor(selectedEventCategory.textColor);
-  }, [defaultEventCategories, selectedCategoryName]);
+  }, [currentEventCategory, defaultEventCategories, isUserCanAddNewCategories]);
+
+  useEffect(() => {
+    if (!eventCategories) {
+      return;
+    }
+
+    const selectedEventCategory = {
+      ...eventCategories.find(e => e.categoryName === selectedCategoryName),
+    };
+    setBtnBgnColor(selectedEventCategory.backgroundColor);
+    setBtnTextColor(selectedEventCategory.textColor);
+  }, [eventCategories, selectedCategoryName]);
 
   const onChangeRadioButton = useCallback((e: RadioChangeEvent) => setRadioButtonVal(e.target.value), []);
 
@@ -124,7 +141,7 @@ export const ColorsEditor: FC<IColorsEditor> = ({
         <Select
           className="modalWindow_Select"
           placeholder="select task category"
-          defaultValue={selectedCategoryName}
+          value={selectedCategoryName}
           onChange={onCategoryClick}
           dropdownRender={menu => (
             <div>

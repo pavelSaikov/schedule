@@ -101,17 +101,6 @@ export interface IRowCategory {
   backgroundColor: string;
 }
 
-export interface ITableRowInfo {
-  key: number;
-  id: string;
-  eventCategory: IEventCategory;
-  title: string;
-  comment: string;
-  dateTime: string;
-  broadcastUrl: string;
-  organizer: string;
-}
-
 // Modify config of 'moment-timezone-data plugin' in 'webpack.config.js' file, if you add or remove timezones
 export enum TimeZone {
   europeLondon = 'Europe/London',

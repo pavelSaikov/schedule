@@ -1,10 +1,13 @@
+import { ReactText } from 'react';
+
+import { ITableRowInfo } from '../../table-schedule.models';
+
 export const rowSelection = {
-  onChange: (selectedRowKeys: any, selectedRows: any) => {
+  onChange: (selectedRowKeys: ReactText[], selectedRows: ITableRowInfo[]): void => {
     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
   },
-  getCheckboxProps: record => ({
+  getCheckboxProps: (record): { disabled: boolean; name: string } => ({
     disabled: record.name === 'Disabled User',
-    // Column configuration not to be checked
     name: record.name,
   }),
 };

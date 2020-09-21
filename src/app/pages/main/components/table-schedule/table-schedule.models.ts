@@ -85,6 +85,5 @@ export const separateByWeeks = (rows: ITableRowInfo[], timeZone: TimeZone): IRow
     weeks[date.week()] ? weeks[date.week()].push(row) : (weeks[date.week()] = [row]);
   });
 
-  console.log(weeks);
   return weeks;
 };

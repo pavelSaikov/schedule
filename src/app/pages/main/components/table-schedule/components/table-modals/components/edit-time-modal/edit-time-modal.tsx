@@ -6,7 +6,7 @@ import { Moment } from 'moment';
 import momentTimeZone from 'moment-timezone';
 import React, { useCallback, useEffect, useState, FC } from 'react';
 
-import { BASE_TIMEZONE, TimeZone, TimeZones } from '../../../../../../models/app.models';
+import { BASE_TIMEZONE, TimeZone, TimeZones } from '../../../../../../../../models/app.models';
 
 interface IEditTimeModal {
   defaultDateTime: string;

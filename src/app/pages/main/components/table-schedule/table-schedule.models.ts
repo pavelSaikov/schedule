@@ -3,7 +3,7 @@ import moment, { Moment } from 'moment-timezone';
 
 import { IEvent, IEventCategory, RowCategoryName, TimeZone } from '../../../../models/app.models';
 import { sortMomentByDate } from '../../main.models';
-import { GITHUB_PREFIX } from './components/organizer-cell/organizer-cell.models';
+import { GITHUB_PREFIX } from './components/table-content/components/organizer-cell/organizer-cell.models';
 
 export interface ITableRowInfo {
   key: number;
@@ -17,7 +17,11 @@ export interface ITableRowInfo {
 }
 
 export interface IRowsSortedByWeeks {
-  [id: number]: ITableRowInfo[];
+  [id: string]: ITableRowInfo[];
+}
+
+export interface ISelectedRows {
+  [id: string]: string[];
 }
 
 export const DEFAULT_MODALS_STATE: IModalsState = {

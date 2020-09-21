@@ -4,8 +4,8 @@ import { EditOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 import React, { FC } from 'react';
 
-import { Tag } from '../../../../../../common/components';
-import { AppMode, IEventCategory, RowCategoryName } from '../../../../../../models/app.models';
+import { Tag } from '../../../../../../../../common/components';
+import { AppMode, IEventCategory, RowCategoryName } from '../../../../../../../../models/app.models';
 
 interface IEventCategoryCell {
   eventCategory: IEventCategory;

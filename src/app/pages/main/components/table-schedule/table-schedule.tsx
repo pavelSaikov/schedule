@@ -12,7 +12,7 @@ import { AppMode, IEvent, IEventCategory, TimeZone } from '../../../../models/ap
 import { eventsSelector, eventCategoriesSelector } from '../../../../store/app.selectors';
 import { uploadUpdatedEvent } from '../../../description/store/description.thunks';
 import { TableModals } from './components';
-import { TableContent } from './components/table-content/table';
+import { TableContent } from './components/table-content/table-content';
 import { IModalsState } from './components/table-modals/table-modals.models';
 import {
   prepareTableRowInfo,
@@ -83,6 +83,21 @@ export const TableSchedule: FC = () => {
     },
     [dispatch, events],
   );
+
+  const onCommentEdit = useCallback(
+    (id: string, newComment: string) => {
+      const updatedEvent: IEvent = cloneDeep(events.find(e => e.id === id));
+
+      if (updatedEvent.comment === newComment) {
+        return;
+      }
+
+      updatedEvent.comment = newComment;
+      dispatch(uploadUpdatedEvent(updatedEvent, new AbortController()));
+    },
+    [dispatch, events],
+  );
+
   return (
     <div>
       <h1>Table Schedule</h1>
@@ -103,7 +118,7 @@ export const TableSchedule: FC = () => {
                   onTimeEdit={onTimeEdit}
                   onDateEdit={onDateEdit}
                   onOrganizerEdit={onOrganizerEdit}
-                  onCommentEdit={() => console.log(`comment edit`)}
+                  onCommentEdit={onCommentEdit}
                   onBroadcastUrlEdit={onBroadCastUrlEdit}
                   onCategoryEdit={onEventCategoryEdit}
                 />

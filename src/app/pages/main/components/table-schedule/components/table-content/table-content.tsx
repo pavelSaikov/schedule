@@ -1,16 +1,13 @@
-import './table.scss';
+import './table-content.scss';
 
 import { Button, Checkbox, Dropdown, Menu, Table } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState, FC } from 'react';
 
 import { columnCategory, AppMode, IEventCategory, TimeZone } from '../../../../../../models/app.models';
-import { BroadcastURLCell } from '../broadcast-url-cell/broadcast-url-cell';
-import { DateCell } from '../date-cell/date-cell';
-import { EventCategoryCell, TimeCell } from '../index';
-import { NameCell } from '../name-cell/name-cell';
-import { OrganizerCell } from '../organizer-cell/organizer-cell';
-import { rowSelection } from './table.models';
 import { ITableRowInfo } from '../../table-schedule.models';
+import { DateCell } from '../date-cell/date-cell';
+import { BroadcastURLCell, EventCategoryCell, NameCell, OrganizerCell, TimeCell } from '../index';
+import { rowSelection } from './table.models';
 
 interface ITableContent {
   rowsContent: ITableRowInfo[];
@@ -24,7 +21,7 @@ interface ITableContent {
   onDateEdit: (id: string, eventCategoryName: string) => void;
   onCategoryEdit: (id: string) => void;
   onOrganizerEdit: (id: string) => void;
-  onCommentEdit: (id: string) => void;
+  onCommentEdit: (id: string, comment: string) => void;
   onBroadcastUrlEdit: (id: string) => void;
 }
 
@@ -54,7 +51,7 @@ export const TableContent: FC<ITableContent> = ({
         title: 'Event type',
         dataIndex: 'eventCategory',
         render: (eventCategory: IEventCategory, record: ITableRowInfo) => ({
-          props: { width: '150px' },
+          props: { width: '100px' },
           children: (
             <EventCategoryCell
               appMode={appMode}
@@ -68,7 +65,7 @@ export const TableContent: FC<ITableContent> = ({
         title: 'Title',
         dataIndex: 'title',
         render: (text: string, record: ITableRowInfo) => ({
-          props: { width: '150px' },
+          props: { width: '170px' },
           children: (
             <NameCell
               name={text}
@@ -83,16 +80,22 @@ export const TableContent: FC<ITableContent> = ({
         dataIndex: 'comment',
         render: (text, record) => ({
           props: {
-            width: '100px',
+            width: '160px',
           },
-          children: text,
+          children: (
+            <NameCell
+              appMode={appMode}
+              name={text}
+              onEditClick={(comment: string) => onCommentEdit(record.id, comment)}
+            />
+          ),
         }),
       },
       {
         title: 'Date',
         dataIndex: 'dateTime',
         render: (text: string, record: ITableRowInfo) => ({
-          props: { width: '150px' },
+          props: { width: '100px' },
           children: (
             <DateCell
               appMode={appMode}
@@ -108,7 +111,7 @@ export const TableContent: FC<ITableContent> = ({
         dataIndex: 'dateTime',
         visible: false,
         render: (text: string, record: ITableRowInfo) => ({
-          props: { width: '150px' },
+          props: { width: '60px' },
           children: (
             <TimeCell
               appMode={appMode}
@@ -123,7 +126,7 @@ export const TableContent: FC<ITableContent> = ({
         title: 'Organizer',
         dataIndex: 'organizer',
         render: (text: string, record: ITableRowInfo) => ({
-          props: { width: '200px' },
+          props: { width: '150px' },
           children: (
             <OrganizerCell appMode={appMode} gitLink={text} onEditClick={() => onOrganizerEdit(record.id)} />
           ),
@@ -133,7 +136,7 @@ export const TableContent: FC<ITableContent> = ({
         title: 'BroadcastUrl',
         dataIndex: 'broadcastUrl',
         render: (url: string, record: ITableRowInfo) => ({
-          props: { width: '150px' },
+          props: { width: '120px' },
           children: (
             <BroadcastURLCell
               appMode={appMode}
@@ -148,6 +151,7 @@ export const TableContent: FC<ITableContent> = ({
       appMode,
       onBroadcastUrlEdit,
       onCategoryEdit,
+      onCommentEdit,
       onDateEdit,
       onOrganizerEdit,
       onTimeEdit,
@@ -196,7 +200,7 @@ export const TableContent: FC<ITableContent> = ({
   return (
     <>
       <Dropdown overlay={visibilityMenu} onVisibleChange={handleVisibilityChange} visible={isMenuVisible}>
-        <Button>Show/Hide</Button>
+        <Button className="table-content_dropdown">Table Columns</Button>
       </Dropdown>
       <Table
         rowKey={(record: ITableRowInfo) => record.id + record.eventCategory.categoryName}

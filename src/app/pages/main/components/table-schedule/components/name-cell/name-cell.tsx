@@ -29,7 +29,7 @@ export const NameCell: FC<INameCell> = ({ name, appMode, onEditClick }) => {
           ellipsis={true}
           editable={
             appMode === AppMode.mentor
-              ? { onChange: onChange, maxLength: 70, autoSize: { maxRows: 1, minRows: 1 } }
+              ? { onChange: onChange, maxLength: 150, autoSize: { maxRows: 1, minRows: 1 } }
               : false
           }
         >

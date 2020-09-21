@@ -2,7 +2,7 @@ import './name-cell.scss';
 
 import { Typography } from 'antd';
 import React, { useState, useEffect, FC, useCallback } from 'react';
-import { AppMode } from '../../../../../../models/app.models';
+import { AppMode } from '../../../../../../../../models/app.models';
 
 const { Paragraph } = Typography;
 interface INameCell {

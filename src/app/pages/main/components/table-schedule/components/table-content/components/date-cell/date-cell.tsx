@@ -6,7 +6,7 @@ import Text from 'antd/lib/typography/Text';
 import moment from 'moment-timezone';
 import React, { useEffect, useState, FC } from 'react';
 
-import { AppMode, TimeZone } from '../../../../../../models/app.models';
+import { AppMode, TimeZone } from '../../../../../../../../models/app.models';
 
 interface IDateCell {
   dateTime: string;

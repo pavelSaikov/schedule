@@ -36,7 +36,7 @@ export const MainPage: FC = () => {
   const scheduleView = useMemo(() => {
     switch (scheduleMode) {
       case ScheduleMode.table:
-        return <TableSchedule />;
+        return <TableSchedule onMoreClick={onMoreClick} />;
       case ScheduleMode.list:
         return (
           <ListSchedule
@@ -49,7 +49,7 @@ export const MainPage: FC = () => {
       case ScheduleMode.calendar:
         return <CalendarSchedule events={events} eventCategories={eventCategories} timeZone={timeZone} />;
       default:
-        return <TableSchedule />;
+        return <TableSchedule onMoreClick={onMoreClick} />;
     }
   }, [eventCategories, events, onMoreClick, scheduleMode, timeZone]);
 

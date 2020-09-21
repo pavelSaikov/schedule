@@ -1,21 +1,20 @@
 import './table-content.scss';
 
-import { Button, Checkbox, Dropdown, Menu, Table } from 'antd';
+import { Button, Table } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState, FC } from 'react';
 
-import { columnCategory, AppMode, IEventCategory, TimeZone } from '../../../../../../models/app.models';
+import { AppMode, IEventCategory, TimeZone } from '../../../../../../models/app.models';
 import { ITableRowInfo } from '../../table-schedule.models';
-import { DateCell } from '../date-cell/date-cell';
-import { BroadcastURLCell, EventCategoryCell, NameCell, OrganizerCell, TimeCell } from '../index';
-import { rowSelection } from './table.models';
+import { DateCell } from './components/date-cell/date-cell';
+import { BroadcastURLCell, EventCategoryCell, NameCell, OrganizerCell, TimeCell } from './components/index';
+import { COLUMN_TITLE } from './table-content.models';
 
 interface ITableContent {
   rowsContent: ITableRowInfo[];
+  checkedColumns: string[];
   appMode: AppMode;
   timeZone: TimeZone;
-  onChange: (newRowContent: ITableRowInfo) => void;
-  onSelect: () => void;
-  onSelectAll: () => void;
+  onSelect: (ids: string[]) => void;
   onTitleEdit: (id: string, title: string) => void;
   onTimeEdit: (id: string, eventCategoryName: string) => void;
   onDateEdit: (id: string, eventCategoryName: string) => void;
@@ -23,14 +22,14 @@ interface ITableContent {
   onOrganizerEdit: (id: string) => void;
   onCommentEdit: (id: string, comment: string) => void;
   onBroadcastUrlEdit: (id: string) => void;
+  onMoreClick: (id: string) => void;
 }
 
 export const TableContent: FC<ITableContent> = ({
   rowsContent,
+  checkedColumns,
   appMode,
   timeZone,
-  onChange,
-  onSelectAll,
   onSelect,
   onTitleEdit,
   onDateEdit,
@@ -39,16 +38,14 @@ export const TableContent: FC<ITableContent> = ({
   onCategoryEdit,
   onCommentEdit,
   onBroadcastUrlEdit,
+  onMoreClick,
 }) => {
-  const [checkedColumns, setCheckedColumns] = useState([]);
-  const [isMenuVisible, changeMenuVisibility] = useState(false);
-  const [menuColumns, setMenuColumns] = useState([]);
   const [filteredColumns, setFiltered] = useState([]);
 
   const columns = useMemo(
     () => [
       {
-        title: 'Event type',
+        title: COLUMN_TITLE.EventType,
         dataIndex: 'eventCategory',
         render: (eventCategory: IEventCategory, record: ITableRowInfo) => ({
           props: { width: '100px' },
@@ -62,7 +59,7 @@ export const TableContent: FC<ITableContent> = ({
         }),
       },
       {
-        title: 'Title',
+        title: COLUMN_TITLE.Title,
         dataIndex: 'title',
         render: (text: string, record: ITableRowInfo) => ({
           props: { width: '170px' },
@@ -76,7 +73,7 @@ export const TableContent: FC<ITableContent> = ({
         }),
       },
       {
-        title: 'Comment',
+        title: COLUMN_TITLE.Comment,
         dataIndex: 'comment',
         render: (text, record) => ({
           props: {
@@ -92,7 +89,7 @@ export const TableContent: FC<ITableContent> = ({
         }),
       },
       {
-        title: 'Date',
+        title: COLUMN_TITLE.Date,
         dataIndex: 'dateTime',
         render: (text: string, record: ITableRowInfo) => ({
           props: { width: '100px' },
@@ -107,7 +104,7 @@ export const TableContent: FC<ITableContent> = ({
         }),
       },
       {
-        title: 'Time',
+        title: COLUMN_TITLE.Time,
         dataIndex: 'dateTime',
         visible: false,
         render: (text: string, record: ITableRowInfo) => ({
@@ -123,7 +120,7 @@ export const TableContent: FC<ITableContent> = ({
         }),
       },
       {
-        title: 'Organizer',
+        title: COLUMN_TITLE.Organizer,
         dataIndex: 'organizer',
         render: (text: string, record: ITableRowInfo) => ({
           props: { width: '150px' },
@@ -133,7 +130,7 @@ export const TableContent: FC<ITableContent> = ({
         }),
       },
       {
-        title: 'BroadcastUrl',
+        title: COLUMN_TITLE.BroadcastUrl,
         dataIndex: 'broadcastUrl',
         render: (url: string, record: ITableRowInfo) => ({
           props: { width: '120px' },
@@ -146,6 +143,18 @@ export const TableContent: FC<ITableContent> = ({
           ),
         }),
       },
+      {
+        title: COLUMN_TITLE.Action,
+        dataIndex: 'id',
+        render: (id: string) => ({
+          props: { width: '80px' },
+          children: (
+            <Button type="primary" onClick={() => onMoreClick(id)}>
+              More
+            </Button>
+          ),
+        }),
+      },
     ],
     [
       appMode,
@@ -153,6 +162,7 @@ export const TableContent: FC<ITableContent> = ({
       onCategoryEdit,
       onCommentEdit,
       onDateEdit,
+      onMoreClick,
       onOrganizerEdit,
       onTimeEdit,
       onTitleEdit,
@@ -170,42 +180,20 @@ export const TableContent: FC<ITableContent> = ({
   useEffect(() => {
     const cols = [];
     columns.map(column => cols.push(column.title));
-    setCheckedColumns(cols);
-    setMenuColumns(cols);
     setFiltered(columns);
   }, [columns]);
 
   useEffect(() => filterColumns(), [checkedColumns, filterColumns]);
 
-  const onChangeRowCategories = useCallback((checkedValues: columnCategory[]) => {
-    setCheckedColumns(checkedValues);
-  }, []);
+  useEffect(() => console.log(rowsContent), [rowsContent]);
 
-  const handleVisibilityChange = useCallback((flag: boolean) => changeMenuVisibility(flag), []);
-  const visibilityMenu = useMemo(
-    () => (
-      <Menu>
-        <Menu.Item title="Columns">
-          <Checkbox.Group
-            onChange={onChangeRowCategories}
-            options={menuColumns}
-            value={checkedColumns}
-            className="table_checkbox-group"
-          />
-        </Menu.Item>
-      </Menu>
-    ),
-    [checkedColumns, menuColumns, onChangeRowCategories],
-  );
   return (
     <>
-      <Dropdown overlay={visibilityMenu} onVisibleChange={handleVisibilityChange} visible={isMenuVisible}>
-        <Button className="table-content_dropdown">Table Columns</Button>
-      </Dropdown>
       <Table
         rowKey={(record: ITableRowInfo) => record.id + record.eventCategory.categoryName}
         rowSelection={{
-          ...rowSelection,
+          onChange: (_, selectedRows: ITableRowInfo[]) =>
+            onSelect(selectedRows.map(r => `${r.id} ${r.eventCategory.categoryName}`)),
         }}
         columns={filteredColumns}
         dataSource={rowsContent}

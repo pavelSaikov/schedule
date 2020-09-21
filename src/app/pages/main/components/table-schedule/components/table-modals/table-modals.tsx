@@ -3,7 +3,6 @@ import cloneDeep from 'lodash.clonedeep';
 import React, { useCallback, useEffect, useState, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { EditDateModal } from '../';
 import { ColorsEditor } from '../../../../../../common/components';
 import { timeZoneSelector } from '../../../../../../common/components/common-header/store/common-header.selectors';
 import { uploadEventCategories } from '../../../../../../common/components/common-header/store/common-header.thunks';
@@ -11,8 +10,7 @@ import { OrganizerEditor } from '../../../../../../common/components/organizer-e
 import { IEvent, IEventCategory, RowCategoryName, TimeZone } from '../../../../../../models/app.models';
 import { eventsSelector, eventCategoriesSelector } from '../../../../../../store/app.selectors';
 import { uploadUpdatedEvent } from '../../../../../description/store/description.thunks';
-import { EditBroadcastLinkModal } from '../edit-broadcast-url-modal/edit-broadcast-url-modal';
-import { EditTimeModal } from '../edit-time-modal/edit-time-modal';
+import { EditBroadcastLinkModal, EditDateModal, EditTimeModal } from './components';
 import { checkIsTimeCanBeChanged, IModalsState } from './table-modals.models';
 
 interface ITableModals {

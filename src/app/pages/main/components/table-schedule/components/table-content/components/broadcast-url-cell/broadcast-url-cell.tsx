@@ -1,6 +1,6 @@
 import React, { useState, useEffect, FC } from 'react';
 
-import { AppMode } from '../../../../../../models/app.models';
+import { AppMode } from '../../../../../../../../models/app.models';
 import { Anchor, Tooltip } from 'antd';
 import './broadcast-url-cell.scss';
 

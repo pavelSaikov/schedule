@@ -1,31 +1,40 @@
 import './list-schedule.scss';
 
-import { Button, Checkbox, List } from 'antd';
+import { Button, Checkbox, List, Space } from 'antd';
 import Item from 'antd/lib/list/Item';
 import cloneDeep from 'lodash.clonedeep';
 import React, { useCallback, useEffect, useRef, useState, FC, MutableRefObject } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import InfiniteLoader from 'react-virtualized/dist/commonjs/InfiniteLoader';
 import VList from 'react-virtualized/dist/commonjs/List';
 import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller';
 
+import { timeZoneSelector } from '../../../../common/components/common-header/store/common-header.selectors';
+import { DropdownSelector } from '../../../../common/components/dropdown-selector/dropdown-selector';
 import { IEvent, IEventCategory, RowCategoryName, TimeZone } from '../../../../models/app.models';
+import { eventsSelector, eventCategoriesSelector } from '../../../../store/app.selectors';
+import { setCheckedEventCategories } from '../../store/main.actions';
+import { checkedEventCategoriesSelector } from '../../store/main.selectors';
 import { ListItem } from './components';
 import { sortListItemsByDate, IListItemInfo } from './list-schedule.models';
 
 interface IListSchedule {
-  events: IEvent[];
-  eventCategories: IEventCategory[];
-  timeZone: TimeZone;
   onMoreClick: (id: string) => void;
 }
 
-export const ListSchedule: FC<IListSchedule> = ({ events, eventCategories, timeZone, onMoreClick }) => {
+export const ListSchedule: FC<IListSchedule> = ({ onMoreClick }) => {
+  const dispatch = useDispatch();
+  const events: IEvent[] = useSelector(eventsSelector);
+  const eventCategories: IEventCategory[] = useSelector(eventCategoriesSelector);
+  const checkedEventCategories: string[] = useSelector(checkedEventCategoriesSelector);
+  const timeZone: TimeZone = useSelector(timeZoneSelector);
+
   const [listItems, setListItems] = useState<IListItemInfo[]>();
   const [listHiddenItems, setListHiddenItems] = useState<IListItemInfo[]>();
-  const loadedRowsMap: MutableRefObject<number[]> = useRef([]);
   const [isAnySelectedItems, setIsAnySelectedItems] = useState(false);
   const [isAnyHiddenItems, setIsAnyHiddenItems] = useState(false);
+  const loadedRowsMap: MutableRefObject<number[]> = useRef([]);
 
   useEffect(() => {
     const listItems: IListItemInfo[] = events
@@ -61,10 +70,11 @@ export const ListSchedule: FC<IListSchedule> = ({ events, eventCategories, timeZ
         return items;
       })
       .flat()
+      .filter(e => checkedEventCategories.includes(e.eventCategory.categoryName))
       .sort(sortListItemsByDate);
 
     setListItems(listItems);
-  }, [eventCategories, events, timeZone]);
+  }, [checkedEventCategories, eventCategories, events, timeZone]);
 
   useEffect(() => {
     if (!listItems) {
@@ -219,28 +229,31 @@ export const ListSchedule: FC<IListSchedule> = ({ events, eventCategories, timeZ
     [autoSize, handleInfiniteOnLoad, isRowLoaded, listItems],
   );
 
+  const onChangeCheckedEventCategories = useCallback(
+    (newValues: string[]) => dispatch(setCheckedEventCategories({ payload: newValues })),
+    [dispatch],
+  );
+
   return (
     <>
       {null}
       {listItems && (
         <div className="list-schedule_wrapper">
           <div className="list-schedule_buttons-container">
-            <Button
-              className="list-schedule_button"
-              type="primary"
-              onClick={onHideButtonClick}
-              disabled={!isAnySelectedItems}
-            >
-              Hide
-            </Button>
-            <Button
-              className="list-schedule_button"
-              type="primary"
-              onClick={onShowButtonClick}
-              disabled={!isAnyHiddenItems}
-            >
-              Show
-            </Button>
+            <DropdownSelector
+              buttonText="Event Categories"
+              categories={eventCategories.map(e => e.categoryName)}
+              checkedCategories={checkedEventCategories}
+              onCheckedCategoriesChange={onChangeCheckedEventCategories}
+            />
+            <Space>
+              <Button type="primary" onClick={onHideButtonClick} disabled={!isAnySelectedItems}>
+                Hide
+              </Button>
+              <Button type="primary" onClick={onShowButtonClick} disabled={!isAnyHiddenItems}>
+                Show
+              </Button>
+            </Space>
           </div>
           <List className="list-schedule_list" bordered>
             <WindowScroller>{infiniteLoader}</WindowScroller>

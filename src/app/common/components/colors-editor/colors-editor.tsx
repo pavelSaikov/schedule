@@ -90,11 +90,15 @@ export const ColorsEditor: FC<IColorsEditor> = ({
     [eventCategories, radioButtonVal, selectedCategoryName],
   );
 
-  const onOk = useCallback(
-    () =>
-      onOkClick(eventCategories, { ...eventCategories.find(e => e.categoryName === selectedCategoryName) }),
-    [eventCategories, onOkClick, selectedCategoryName],
-  );
+  const onOk = useCallback(() => {
+    const updatedEventCategories = isUserCanAddNewCategories
+      ? [...eventCategories, defaultEventCategories.find(e => e.categoryName === RowCategoryName.deadline)]
+      : [...eventCategories];
+
+    onOkClick(updatedEventCategories, {
+      ...eventCategories.find(e => e.categoryName === selectedCategoryName),
+    });
+  }, [defaultEventCategories, eventCategories, isUserCanAddNewCategories, onOkClick, selectedCategoryName]);
 
   const onCancel = useCallback(() => onCancelClick(), [onCancelClick]);
 

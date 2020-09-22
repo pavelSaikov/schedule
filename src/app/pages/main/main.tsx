@@ -1,7 +1,7 @@
 import './main.scss';
 
 import React, { useCallback, useEffect, useMemo, useState, FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { timeZoneSelector } from '../../common/components/common-header/store/common-header.selectors';
@@ -9,10 +9,12 @@ import { IEvent, IEventCategory, ScheduleMode, TimeZone } from '../../models/app
 import { AppRoutes } from '../../routes/routes';
 import { eventsSelector, eventCategoriesSelector } from '../../store/app.selectors';
 import { CalendarSchedule, ListSchedule, ScheduleNavigation, TableSchedule } from './components';
-import { sortEventsByDate } from './main.models';
+import { sortEventsByDate, LOCAL_STORAGE_CHECKED_EVENT_CATEGORIES } from './main.models';
 import { scheduleModeSelector } from './store/main.selectors';
+import { setCheckedEventCategories } from './store/main.actions';
 
 export const MainPage: FC = () => {
+  const dispatch = useDispatch();
   const scheduleMode: ScheduleMode = useSelector(scheduleModeSelector);
   const timeZone: TimeZone = useSelector(timeZoneSelector);
   const events: IEvent[] = useSelector(eventsSelector);
@@ -31,6 +33,14 @@ export const MainPage: FC = () => {
     setIsEventsStructured(true);
   }, [events, isEventsStructured]);
 
+  useEffect(() => {
+    if (!localStorage.getItem(LOCAL_STORAGE_CHECKED_EVENT_CATEGORIES) && eventCategories) {
+      const eventCategoriesNames: string[] = eventCategories.map(ec => ec.categoryName);
+
+      dispatch(setCheckedEventCategories({ payload: eventCategoriesNames }));
+    }
+  }, [dispatch, eventCategories]);
+
   const onMoreClick = useCallback((id: string) => history.push(`/${AppRoutes.description}/${id}`), [history]);
 
   const scheduleView = useMemo(() => {
@@ -38,14 +48,7 @@ export const MainPage: FC = () => {
       case ScheduleMode.table:
         return <TableSchedule onMoreClick={onMoreClick} />;
       case ScheduleMode.list:
-        return (
-          <ListSchedule
-            events={events}
-            eventCategories={eventCategories}
-            timeZone={timeZone}
-            onMoreClick={onMoreClick}
-          />
-        );
+        return <ListSchedule onMoreClick={onMoreClick} />;
       case ScheduleMode.calendar:
         return <CalendarSchedule events={events} eventCategories={eventCategories} timeZone={timeZone} />;
       default:

@@ -2,6 +2,10 @@ import moment, { Moment } from 'moment';
 
 import { IEvent } from '../../models/app.models';
 
+export const LOCAL_STORAGE_SCHEDULE_MODE = 'Schedule Mode';
+export const LOCAL_STORAGE_CHECKED_COLUMNS = 'Checked Columns';
+export const LOCAL_STORAGE_CHECKED_EVENT_CATEGORIES = 'Checked Event Categories';
+
 export const sortEventsByDate = (firstEvent: IEvent, secondEvent: IEvent): number => {
   const firstMoment: Moment = moment(firstEvent.dateTime);
   const secondMoment: Moment = moment(secondEvent.dateTime);

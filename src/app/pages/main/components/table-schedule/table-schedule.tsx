@@ -59,9 +59,10 @@ export const TableSchedule: FC<ITableSchedule> = ({ onMoreClick }) => {
     setRowsSortedByWeeks(separatedByWeeks);
   }, [eventCategories, events, timeZone]);
 
-  useEffect(() => setIsHideButtonAvailable(Object.values(selectedRows).some(arr => arr.length !== 0)), [
-    selectedRows,
-  ]);
+  useEffect(() => {
+    console.log(selectedRows);
+    setIsHideButtonAvailable(Object.values(selectedRows).some(arr => arr.length !== 0));
+  }, [selectedRows]);
 
   useEffect(() => setIsShowButtonAvailable(Object.values(hiddenRows).some(arr => arr.length !== 0)), [
     hiddenRows,
@@ -140,7 +141,7 @@ export const TableSchedule: FC<ITableSchedule> = ({ onMoreClick }) => {
     (week: string, ids: string[]) =>
       setSelectedRows(prevRows => ({
         ...prevRows,
-        [week]: prevRows[week] ? [...prevRows[week], ...ids] : ids,
+        [week]: prevRows[week] ? (ids.length ? [...prevRows[week], ...ids] : ids) : ids,
       })),
     [],
   );
@@ -188,7 +189,7 @@ export const TableSchedule: FC<ITableSchedule> = ({ onMoreClick }) => {
             onCheckedCategoriesChange={onChangeEventCategories}
           />
         </Space>
-        <Space>
+        <Space className="table-schedule_right-controls">
           <Button type="primary" disabled={!isShowButtonAvailable} onClick={onShow}>
             Show
           </Button>
@@ -198,7 +199,7 @@ export const TableSchedule: FC<ITableSchedule> = ({ onMoreClick }) => {
         </Space>
       </div>
       {visibleRowsSortedByWeeks && (
-        <Collapse accordion>
+        <Collapse className="table-schedule_collapse" accordion>
           {Object.keys(visibleRowsSortedByWeeks).map((key, index) => {
             const week: ITableRowInfo[] = visibleRowsSortedByWeeks[key];
             const firstDay: string = moment(week[0].dateTime).tz(timeZone).day(1).format('DD MMMM');
@@ -209,25 +210,29 @@ export const TableSchedule: FC<ITableSchedule> = ({ onMoreClick }) => {
 
             return (
               <CollapsePanel
+                className="table-schedule_collapse_panel"
                 key={`${key} ${week.length}`}
                 header={`Week #${index + 1} (${firstDay} - ${lastDay})`}
               >
-                <TableContent
-                  key={`${key} ${week.length}`}
-                  checkedColumns={checkedColumns}
-                  rowsContent={week}
-                  appMode={appMode}
-                  timeZone={timeZone}
-                  onSelect={(ids: string[]) => onSelect(key, ids)}
-                  onTitleEdit={onTitleEdit}
-                  onTimeEdit={onTimeEdit}
-                  onDateEdit={onDateEdit}
-                  onOrganizerEdit={onOrganizerEdit}
-                  onCommentEdit={onCommentEdit}
-                  onBroadcastUrlEdit={onBroadCastUrlEdit}
-                  onCategoryEdit={onEventCategoryEdit}
-                  onMoreClick={onMore}
-                />
+                <div className="table-schedule_table">
+                  <TableContent
+                    className=""
+                    key={`${key} ${week.length}`}
+                    checkedColumns={checkedColumns}
+                    rowsContent={week}
+                    appMode={appMode}
+                    timeZone={timeZone}
+                    onSelect={(ids: string[]) => onSelect(key, ids)}
+                    onTitleEdit={onTitleEdit}
+                    onTimeEdit={onTimeEdit}
+                    onDateEdit={onDateEdit}
+                    onOrganizerEdit={onOrganizerEdit}
+                    onCommentEdit={onCommentEdit}
+                    onBroadcastUrlEdit={onBroadCastUrlEdit}
+                    onCategoryEdit={onEventCategoryEdit}
+                    onMoreClick={onMore}
+                  />
+                </div>
               </CollapsePanel>
             );
           })}

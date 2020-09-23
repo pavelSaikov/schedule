@@ -12,6 +12,7 @@ import { COLUMN_TITLE } from './table-content.models';
 interface ITableContent {
   rowsContent: ITableRowInfo[];
   checkedColumns: string[];
+  className: string;
   appMode: AppMode;
   timeZone: TimeZone;
   onSelect: (ids: string[]) => void;
@@ -28,6 +29,7 @@ interface ITableContent {
 export const TableContent: FC<ITableContent> = ({
   rowsContent,
   checkedColumns,
+  className,
   appMode,
   timeZone,
   onSelect,
@@ -190,6 +192,7 @@ export const TableContent: FC<ITableContent> = ({
   return (
     <>
       <Table
+        rowClassName={className}
         rowKey={(record: ITableRowInfo) => record.id + record.eventCategory.categoryName}
         rowSelection={{
           onChange: (_, selectedRows: ITableRowInfo[]) =>

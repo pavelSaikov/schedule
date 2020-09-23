@@ -57,7 +57,7 @@ export const CommonHeader: FC = () => {
   return (
     timeZone && (
       <div className="header_header-wrapper">
-        <div>
+        <div className="header_buttons-container">
           <Select className="header_select" defaultValue={timeZone} onChange={onTimeZoneChange}>
             {TimeZones.map(timeZone => (
               <Select.Option value={timeZone} key={timeZone}>
@@ -65,7 +65,8 @@ export const CommonHeader: FC = () => {
               </Select.Option>
             ))}
           </Select>
-          <Button type={'primary'} icon={<EditOutlined />} onClick={onEditColors}>
+
+          <Button className="button" type={'primary'} icon={<EditOutlined />} onClick={onEditColors}>
             Edit Colors
           </Button>
         </div>

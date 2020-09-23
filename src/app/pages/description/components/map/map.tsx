@@ -6,7 +6,8 @@ import React, { useCallback, useEffect, useRef, useState, FC } from 'react';
 
 import { config } from '../../../../config';
 import { AppMode } from '../../../../models/app.models';
-import { ICoordinates, MINSK_COORDINATES } from './map.models';
+import { IFrameSize } from '../video-list/video-list.models';
+import { DEFAULT_MAP_SIZE, ICoordinates, MINSK_COORDINATES } from './map.models';
 
 interface IMap {
   markerCoordinates: ICoordinates;
@@ -18,6 +19,7 @@ export const Map: FC<IMap> = ({ markerCoordinates, appMode, onCoordinatesChange 
   const [defaultData] = useState({ markerCoordinates, appMode });
   const [isMarkerVisible, setIsMarkerVisible] = useState(false);
   const [marker, setMarker] = useState(null);
+  const [mapSizes, setMapSizes] = useState<IFrameSize>(DEFAULT_MAP_SIZE);
   const mapRef = useRef(null);
 
   useEffect(() => {
@@ -49,6 +51,23 @@ export const Map: FC<IMap> = ({ markerCoordinates, appMode, onCoordinatesChange 
       return newMarker;
     });
   }, [defaultData]);
+
+  useEffect(() => {
+    const callback = () => {
+      const newWidth: number = document.documentElement.clientWidth * 0.9;
+      const newHeight: number = (newWidth / 3) * 2;
+      const newMapSize: IFrameSize =
+        newWidth > DEFAULT_MAP_SIZE.width ? { ...DEFAULT_MAP_SIZE } : { width: newWidth, height: newHeight };
+
+      setMapSizes(newMapSize);
+    };
+
+    callback();
+
+    window.addEventListener('resize', callback);
+
+    return () => window.removeEventListener('resize', callback);
+  }, []);
 
   useEffect(() => {
     if (!marker) {
@@ -87,8 +106,12 @@ export const Map: FC<IMap> = ({ markerCoordinates, appMode, onCoordinatesChange 
   }, [marker, onCoordinatesChange]);
 
   return (
-    <div>
-      <div id="map" className="map_map-container"></div>
+    <div className="map_wrapper">
+      <div
+        id="map"
+        className="map_map-container"
+        style={{ width: mapSizes.width, height: mapSizes.height }}
+      ></div>
       {appMode === AppMode.mentor && (
         <Button
           className="map_button"

@@ -31,16 +31,25 @@ export const ListItem: FC<IListItem> = ({ itemInfo, onMoreClick }) => {
     <div className="list-item_wrapper" style={{ backgroundColor: itemInfo.eventCategory.backgroundColor }}>
       <div className="list-item_header-container">
         <div className="list-item_title-container">
-          <Title className="list-item_header" level={3} style={{ color: itemInfo.eventCategory.textColor }}>
+          <Title
+            className="list-item_header"
+            level={3}
+            style={{ color: itemInfo.eventCategory.textColor }}
+            ellipsis={{ rows: 1 }}
+          >
             {itemInfo.title}
           </Title>
-          <Tag
-            text={itemInfo.eventCategory.categoryName}
-            textColor={itemInfo.eventCategory.textColor}
-            backgroundColor={itemInfo.eventCategory.backgroundColor}
-          />
+          <div className="list-item_tag">
+            <Tag
+              text={itemInfo.eventCategory.categoryName}
+              textColor={itemInfo.eventCategory.textColor}
+              backgroundColor={itemInfo.eventCategory.backgroundColor}
+            />
+          </div>
         </div>
-        <Text style={{ color: itemInfo.eventCategory.textColor }}>{dateTime}</Text>
+        <Text className="list-item_date" style={{ color: itemInfo.eventCategory.textColor }}>
+          {dateTime}
+        </Text>
       </div>
       <Paragraph
         className="list-item_description"

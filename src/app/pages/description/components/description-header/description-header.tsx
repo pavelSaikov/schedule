@@ -58,7 +58,7 @@ export const DescriptionHeader: FC<IDescriptionHeader> = ({
   return (
     <div className="description-header_header-container">
       <Title
-        className="title"
+        className="description-header_title"
         editable={appMode === AppMode.mentor ? { onChange: onTitleChange, autoSize: { maxRows: 1 } } : false}
         ellipsis={{ rows: 1 }}
         level={2}

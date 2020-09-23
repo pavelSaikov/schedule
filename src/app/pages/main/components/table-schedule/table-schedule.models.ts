@@ -91,3 +91,22 @@ export const separateByWeeks = (rows: ITableRowInfo[], timeZone: TimeZone): IRow
 
   return weeks;
 };
+
+export const filterEvents = (
+  rowsSortedByWeeks: IRowsSortedByWeeks,
+  hiddenRows: ISelectedRows,
+  checkedEventCategories: string[],
+): IRowsSortedByWeeks =>
+  Object.keys(rowsSortedByWeeks).reduce((result: IRowsSortedByWeeks, key: string) => {
+    const visibleEvents: ITableRowInfo[] = rowsSortedByWeeks[key].filter(
+      e =>
+        (!hiddenRows[key] || !hiddenRows[key].includes(`${e.id} ${e.eventCategory.categoryName}`)) &&
+        checkedEventCategories.includes(e.eventCategory.categoryName),
+    );
+
+    if (visibleEvents.length) {
+      result[key] = visibleEvents;
+    }
+
+    return result;
+  }, {});

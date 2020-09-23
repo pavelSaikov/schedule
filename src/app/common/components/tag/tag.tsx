@@ -12,7 +12,7 @@ interface ITag {
 export const Tag: FC<ITag> = ({ text, textColor, backgroundColor }) => {
   return (
     <div className="tag" style={{ backgroundColor, borderColor: textColor }}>
-      <Text strong style={{ color: textColor }}>
+      <Text strong style={{ color: textColor }} ellipsis>
         {text}
       </Text>
     </div>

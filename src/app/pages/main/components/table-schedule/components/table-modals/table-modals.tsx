@@ -10,6 +10,8 @@ import { OrganizerEditor } from '../../../../../../common/components/organizer-e
 import { IEvent, IEventCategory, RowCategoryName, TimeZone } from '../../../../../../models/app.models';
 import { eventsSelector, eventCategoriesSelector } from '../../../../../../store/app.selectors';
 import { uploadUpdatedEvent } from '../../../../../description/store/description.thunks';
+import { setCheckedEventCategories } from '../../../../store/main.actions';
+import { checkedEventCategoriesSelector } from '../../../../store/main.selectors';
 import { EditBroadcastLinkModal, EditDateModal, EditTimeModal } from './components';
 import { checkIsTimeCanBeChanged, IModalsState } from './table-modals.models';
 
@@ -29,6 +31,7 @@ export const TableModals: FC<ITableModals> = ({
   const events: IEvent[] = useSelector(eventsSelector);
   const timeZone: TimeZone = useSelector(timeZoneSelector);
   const eventCategories: IEventCategory[] = useSelector(eventCategoriesSelector);
+  const checkedEventCategories: string[] = useSelector(checkedEventCategoriesSelector);
   const dispatch = useDispatch();
 
   const [editableEvent, setEditableEvent] = useState<IEvent>();
@@ -112,6 +115,28 @@ export const TableModals: FC<ITableModals> = ({
   const onEventCategoryEdit = useCallback(
     (updatedEventCategories: IEventCategory[], newEventCategory: IEventCategory) => {
       onModalClose();
+
+      const nameOfNewEventCategories: string[] = updatedEventCategories.reduce(
+        (result, updatedEventCategory) => {
+          let isNewEventCategory = true;
+          eventCategories.forEach(ec => {
+            if (ec.categoryName === updatedEventCategory.categoryName) {
+              isNewEventCategory = false;
+            }
+          });
+
+          if (isNewEventCategory) {
+            result.push(updatedEventCategory.categoryName);
+          }
+
+          return result;
+        },
+        [],
+      );
+
+      const newCheckedEventCategories = [...checkedEventCategories, ...nameOfNewEventCategories];
+
+      dispatch(setCheckedEventCategories({ payload: newCheckedEventCategories }));
       dispatch(uploadEventCategories(updatedEventCategories, new AbortController()));
 
       if (editableEvent.eventCategoryName === newEventCategory.categoryName) {
@@ -122,7 +147,7 @@ export const TableModals: FC<ITableModals> = ({
       newEvent.eventCategoryName = newEventCategory.categoryName;
       reflectEventChanges(newEvent);
     },
-    [dispatch, editableEvent, onModalClose, reflectEventChanges],
+    [checkedEventCategories, dispatch, editableEvent, eventCategories, onModalClose, reflectEventChanges],
   );
 
   return (

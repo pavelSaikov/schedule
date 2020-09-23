@@ -1,22 +1,27 @@
 import './table-schedule.scss';
 
-import { Button, Checkbox, Collapse, Dropdown, Menu, Space } from 'antd';
+import { Button, Collapse, Space } from 'antd';
 import CollapsePanel from 'antd/lib/collapse/CollapsePanel';
 import cloneDeep from 'lodash.clonedeep';
-import React, { useCallback, useEffect, useMemo, useState, FC } from 'react';
+import moment from 'moment';
+import React, { useCallback, useEffect, useState, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
   appModeSelector,
   timeZoneSelector,
 } from '../../../../common/components/common-header/store/common-header.selectors';
+import { DropdownSelector } from '../../../../common/components/dropdown-selector/dropdown-selector';
 import { AppMode, IEvent, IEventCategory, TimeZone } from '../../../../models/app.models';
 import { eventsSelector, eventCategoriesSelector } from '../../../../store/app.selectors';
 import { uploadUpdatedEvent } from '../../../description/store/description.thunks';
+import { setCheckedColumns, setCheckedEventCategories } from '../../store/main.actions';
+import { checkedColumnsSelector, checkedEventCategoriesSelector } from '../../store/main.selectors';
 import { TableContent, TableModals } from './components';
 import { COLUMN_TITLES } from './components/table-content/table-content.models';
 import { IModalsState } from './components/table-modals/table-modals.models';
 import {
+  filterEvents,
   prepareTableRowInfo,
   separateByWeeks,
   DEFAULT_MODALS_STATE,
@@ -34,6 +39,8 @@ export const TableSchedule: FC<ITableSchedule> = ({ onMoreClick }) => {
   const appMode: AppMode = useSelector(appModeSelector);
   const events: IEvent[] = useSelector(eventsSelector);
   const eventCategories: IEventCategory[] = useSelector(eventCategoriesSelector);
+  const checkedEventCategories: string[] = useSelector(checkedEventCategoriesSelector);
+  const checkedColumns = useSelector(checkedColumnsSelector);
   const dispatch = useDispatch();
 
   const [rowsSortedByWeeks, setRowsSortedByWeeks] = useState<IRowsSortedByWeeks>();
@@ -41,24 +48,16 @@ export const TableSchedule: FC<ITableSchedule> = ({ onMoreClick }) => {
   const [modalsState, setModalsState] = useState<IModalsState>(DEFAULT_MODALS_STATE);
   const [idEditableEvent, setIdEditableEvent] = useState<string>();
   const [eventCategoryNameOfEditableEvent, setEventCategoryNameOfEditableEvent] = useState<string>();
-  const [checkedColumns, setCheckedColumns] = useState<string[]>([...COLUMN_TITLES]);
-  const [menuColumns] = useState([...COLUMN_TITLES]);
-  const [isColumnsMenuVisible, setIsColumnsMenuVisible] = useState(false);
   const [selectedRows, setSelectedRows] = useState<ISelectedRows>({});
   const [hiddenRows, setHiddenRows] = useState<ISelectedRows>({});
   const [isShowButtonAvailable, setIsShowButtonAvailable] = useState(false);
   const [isHideButtonAvailable, setIsHideButtonAvailable] = useState(false);
 
   useEffect(() => {
-    if (visibleRowsSortedByWeeks) {
-      return;
-    }
-
     const rowsContent: ITableRowInfo[] = prepareTableRowInfo(events, eventCategories);
     const separatedByWeeks: IRowsSortedByWeeks = separateByWeeks(rowsContent, timeZone);
     setRowsSortedByWeeks(separatedByWeeks);
-    setVisibleRowsSortedByWeeks(cloneDeep(separatedByWeeks));
-  }, [eventCategories, events, timeZone, visibleRowsSortedByWeeks]);
+  }, [eventCategories, events, timeZone]);
 
   useEffect(() => setIsHideButtonAvailable(Object.values(selectedRows).some(arr => arr.length !== 0)), [
     selectedRows,
@@ -73,20 +72,10 @@ export const TableSchedule: FC<ITableSchedule> = ({ onMoreClick }) => {
       return;
     }
 
-    const newVisibleRows = Object.keys(rowsSortedByWeeks).reduce(
-      (result: IRowsSortedByWeeks, key: string) => {
-        const visibleEvents: ITableRowInfo[] = rowsSortedByWeeks[key].filter(
-          e => !hiddenRows[key] || !hiddenRows[key].includes(`${e.id} ${e.eventCategory.categoryName}`),
-        );
-
-        result[key] = visibleEvents;
-        return result;
-      },
-      {},
-    );
+    const newVisibleRows = filterEvents(rowsSortedByWeeks, hiddenRows, checkedEventCategories);
 
     setVisibleRowsSortedByWeeks(newVisibleRows);
-  }, [hiddenRows, rowsSortedByWeeks]);
+  }, [checkedEventCategories, hiddenRows, rowsSortedByWeeks]);
 
   const onModalsClose = useCallback(() => setModalsState(DEFAULT_MODALS_STATE), []);
 
@@ -172,41 +161,33 @@ export const TableSchedule: FC<ITableSchedule> = ({ onMoreClick }) => {
 
   const onShow = useCallback(() => setHiddenRows({}), []);
 
-  const onChangeRowCategories = useCallback((checkedValues: string[]) => {
-    setCheckedColumns(checkedValues);
-  }, []);
+  const onChangeRowCategories = useCallback(
+    (checkedValues: string[]) => dispatch(setCheckedColumns({ payload: [...checkedValues] })),
+    [dispatch],
+  );
 
-  const handleVisibilityChange = useCallback((flag: boolean) => setIsColumnsMenuVisible(flag), []);
-
-  const visibilityMenu = useMemo(
-    () => (
-      <Menu>
-        <Menu.Item title="Columns">
-          <Checkbox.Group
-            onChange={onChangeRowCategories}
-            options={menuColumns}
-            value={checkedColumns}
-            className="table_checkbox-group"
-          />
-        </Menu.Item>
-      </Menu>
-    ),
-    [checkedColumns, menuColumns, onChangeRowCategories],
+  const onChangeEventCategories = useCallback(
+    (checkedValues: string[]) => dispatch(setCheckedEventCategories({ payload: checkedValues })),
+    [dispatch],
   );
 
   return (
     <div>
-      <h1>Table Schedule</h1>
       <div className="table-schedule_controls">
-        <Dropdown
-          overlay={visibilityMenu}
-          onVisibleChange={handleVisibilityChange}
-          visible={isColumnsMenuVisible}
-        >
-          <Button className="table-schedule_dropdown" type="primary">
-            Table Columns
-          </Button>
-        </Dropdown>
+        <Space>
+          <DropdownSelector
+            buttonText="Table Columns"
+            categories={COLUMN_TITLES}
+            checkedCategories={checkedColumns}
+            onCheckedCategoriesChange={onChangeRowCategories}
+          />
+          <DropdownSelector
+            buttonText="Event Categories"
+            categories={eventCategories.map(e => e.categoryName)}
+            checkedCategories={checkedEventCategories}
+            onCheckedCategoriesChange={onChangeEventCategories}
+          />
+        </Space>
         <Space>
           <Button type="primary" disabled={!isShowButtonAvailable} onClick={onShow}>
             Show
@@ -219,9 +200,18 @@ export const TableSchedule: FC<ITableSchedule> = ({ onMoreClick }) => {
       {visibleRowsSortedByWeeks && (
         <Collapse accordion>
           {Object.keys(visibleRowsSortedByWeeks).map((key, index) => {
-            const week = visibleRowsSortedByWeeks[key];
+            const week: ITableRowInfo[] = visibleRowsSortedByWeeks[key];
+            const firstDay: string = moment(week[0].dateTime).tz(timeZone).day(1).format('DD MMMM');
+            const lastDay: string = moment(week[week.length - 1].dateTime)
+              .tz(timeZone)
+              .day(7)
+              .format('DD MMMM');
+
             return (
-              <CollapsePanel key={`${key} ${week.length}`} header={'Week #' + (index + 1)}>
+              <CollapsePanel
+                key={`${key} ${week.length}`}
+                header={`Week #${index + 1} (${firstDay} - ${lastDay})`}
+              >
                 <TableContent
                   key={`${key} ${week.length}`}
                   checkedColumns={checkedColumns}

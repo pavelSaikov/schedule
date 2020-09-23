@@ -4,12 +4,8 @@
 
 .list-schedule_buttons-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: 15px 10px;
-
-  & .list-schedule_button {
-    margin-right: 10px;
-  }
 }
 
 .list-schedule_list {

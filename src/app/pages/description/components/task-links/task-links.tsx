@@ -56,7 +56,9 @@ export const TaskLinks: FC<ITaskLinks> = ({ taskLinks, appMode, onModifyLinks })
   const renderItem = useCallback(
     (link: ILinkWithDescription, index: number) => (
       <Item>
-        <Link href={link.url}>{link.linkDescription}</Link>
+        <Link className="task-links_link" href={link.url}>
+          {link.linkDescription}
+        </Link>
         {appMode === AppMode.mentor && (
           <Space size="middle">
             <Tooltip title="Edit Link">

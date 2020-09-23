@@ -17,4 +17,7 @@
 
 .description_content-wrapper {
   padding: 0 40px;
+  @media screen and (max-width: 550px) {
+    padding: 0;
+  }
 }

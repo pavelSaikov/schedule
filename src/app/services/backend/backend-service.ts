@@ -71,17 +71,19 @@ class BackendService {
   }
 
   public getAllEvents(abortController: AbortController): Promise<IEvent[]> {
-    return fetch(`${this.endpoint}/team/${this.teamId}/events`, { signal: abortController.signal })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
+    try {
+      return fetch(`${this.endpoint}/team/${this.teamId}/events`, { signal: abortController.signal })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
 
-        throw new Error('Can not get all events from backend');
-      })
-      .then((eventsResponse: IEventsResponse) =>
-        eventsResponse.data.map(backendEvent => this.parseBackendEventToAppEvent(backendEvent)),
-      );
+          throw new Error('Can not get all events from backend');
+        })
+        .then((eventsResponse: IEventsResponse) =>
+          eventsResponse.data.map(backendEvent => this.parseBackendEventToAppEvent(backendEvent)),
+        );
+    } catch (error) {}
   }
 
   public getEvent(eventId: string, abortController: AbortController): Promise<IEvent> {

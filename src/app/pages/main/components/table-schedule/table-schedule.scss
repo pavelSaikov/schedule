@@ -3,4 +3,24 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 0;
+
+  @media screen and (max-width: 480px) {
+    flex-direction: column;
+
+    & .table-schedule_right-controls {
+      margin-top: 10px;
+    }
+  }
+}
+
+.table-schedule_collapse_panel {
+  & .ant-collapse-content-box {
+    @media screen and (max-width: 1450px) {
+      overflow-x: scroll;
+    }
+  }
+}
+
+.table-schedule_table {
+  min-width: 1400px;
 }

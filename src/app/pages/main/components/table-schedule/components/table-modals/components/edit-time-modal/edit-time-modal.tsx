@@ -49,14 +49,27 @@ export const EditTimeModal: FC<IEditTimeModal> = ({
 
   return (
     <Modal title="Edit Time" visible={visible} onCancel={onCancelClick} onOk={onOkClick} centered>
-      <Select defaultValue={timeZone} onChange={onTimeZoneSelect} className="edit-time-modal_timezone-select">
-        {TimeZones.map(tz => (
-          <Select.Option key={tz} value={tz}>
-            {tz}
-          </Select.Option>
-        ))}
-      </Select>
-      <TimePicker value={time} format="HH:mm" onChange={onTimeSelect} allowClear={false} showNow={false} />
+      <div className="edit-time-modal_wrapper">
+        <Select
+          defaultValue={timeZone}
+          onChange={onTimeZoneSelect}
+          className="edit-time-modal_timezone-select"
+        >
+          {TimeZones.map(tz => (
+            <Select.Option key={tz} value={tz}>
+              {tz}
+            </Select.Option>
+          ))}
+        </Select>
+        <TimePicker
+          className="edit-time-modal_time-picker"
+          value={time}
+          format="HH:mm"
+          onChange={onTimeSelect}
+          allowClear={false}
+          showNow={false}
+        />
+      </div>
     </Modal>
   );
 };

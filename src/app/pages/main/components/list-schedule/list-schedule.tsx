@@ -146,7 +146,11 @@ export const ListSchedule: FC<IListSchedule> = ({ onMoreClick }) => {
       const i: IListItemInfo = { ...listItems[index] };
 
       return (
-        <Item key={key} style={{ ...style, background: i.isSelected ? '#e6f7ff' : null }}>
+        <Item
+          className="list-schedule_list-item"
+          key={key}
+          style={{ ...style, background: i.isSelected ? '#e6f7ff' : null }}
+        >
           <Checkbox
             className="list-schedule_checkbox"
             onClick={() => onCheckBoxClick(i.id, i.eventCategory.categoryName)}

@@ -6,5 +6,5 @@ import { updateEvent } from '../../../store/app.actions';
 
 export const uploadUpdatedEvent = (event: IEvent, abortController: AbortController) => dispatch => {
   dispatch(updateEvent({ payload: cloneDeep(event) }));
-  backendService.updateEvent(cloneDeep(event), abortController);
+  backendService.updateEvent(cloneDeep(event), abortController).catch(() => {});
 };

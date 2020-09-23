@@ -5,14 +5,16 @@ import { Tooltip } from 'antd';
 import React, { useCallback, useEffect, useState, FC } from 'react';
 
 import { AppMode } from '../../../../../models/app.models';
+import { IFrameSize } from '../video-list.models';
 
 interface IVideo {
   videoUrl: string;
   appMode: AppMode;
   onRemoveClick: (videoUrl: string) => void;
+  videoSize: IFrameSize;
 }
 
-export const Video: FC<IVideo> = ({ videoUrl, appMode, onRemoveClick }) => {
+export const Video: FC<IVideo> = ({ videoUrl, appMode, onRemoveClick, videoSize }) => {
   const [frameUrl, setFrameUrl] = useState<string>();
 
   useEffect(() => {
@@ -25,8 +27,8 @@ export const Video: FC<IVideo> = ({ videoUrl, appMode, onRemoveClick }) => {
   return (
     <div className="video_wrapper">
       <iframe
-        width="608"
-        height="342"
+        width={videoSize.width}
+        height={videoSize.height}
         frameBorder="no"
         src={frameUrl}
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"

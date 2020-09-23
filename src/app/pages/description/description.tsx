@@ -143,6 +143,7 @@ export const DescriptionPage: FC = () => {
 
   const uploadEvent = useCallback(() => {
     eventAbortControllerRef.current ? eventAbortControllerRef.current.abort() : null;
+
     const newAbortController = new AbortController();
     dispatch(uploadUpdatedEvent(cloneDeep(updatedEventRef.current), newAbortController));
     eventAbortControllerRef.current = newAbortController;
@@ -157,6 +158,7 @@ export const DescriptionPage: FC = () => {
       const abortController = new AbortController();
       eventCategoriesAbortControllerRef.current ? eventCategoriesAbortControllerRef.current.abort() : null;
       eventCategoriesAbortControllerRef.current = abortController;
+
       dispatch(
         uploadEventCategories(
           cloneDeep([
@@ -508,7 +510,7 @@ export const DescriptionPage: FC = () => {
                 />
                 {linksComponent}
                 {videosComponent}
-                {photosComponent}
+                {/* {photosComponent} */}
                 {mapComponent}
                 {feedbackComponent}
                 {questionFormComponent}

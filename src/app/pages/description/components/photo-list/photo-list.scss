@@ -1,41 +1,34 @@
-.photoList_slide {
-  position: relative;
-  cursor: pointer;
-
-  & img {
-    height: 100%;
-    width: auto;
-  }
-}
-
-.photoList_slider {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.photoList_arrow {
-  font-size: 30px;
-}
-
-.photoList_carousel {
-  width: 608px;
-}
-
-.photoList_photo--size {
-  width: 120px;
-  height: 120px;
+.photo_wrapper--size {
+  overflow: hidden;
+  padding: 10px;
 }
 
 .photoList_photo {
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
+  cursor: pointer;
 }
 
 .photoList_deleteIcon {
   position: absolute;
   font-size: 20px;
-  top: 0px;
-  left: 100px;
+  top: 3px;
+  right: 3px;
+}
+
+.photo_wrapper {
+  position: relative;
+}
+
+.slick-dots {
+  & > li {
+    background-color: #1890ff !important;
+  }
+
+  .slick-active > button {
+    background: #005db3 !important;
+    opacity: 1 !important;
+  }
+}
+
+.slick-dots-bottom {
+  bottom: -15px !important;
 }

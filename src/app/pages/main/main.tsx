@@ -10,8 +10,8 @@ import { AppRoutes } from '../../routes/routes';
 import { eventsSelector, eventCategoriesSelector } from '../../store/app.selectors';
 import { CalendarSchedule, ListSchedule, ScheduleNavigation, TableSchedule } from './components';
 import { sortEventsByDate, LOCAL_STORAGE_CHECKED_EVENT_CATEGORIES } from './main.models';
-import { scheduleModeSelector } from './store/main.selectors';
 import { setCheckedEventCategories } from './store/main.actions';
+import { scheduleModeSelector } from './store/main.selectors';
 
 export const MainPage: FC = () => {
   const dispatch = useDispatch();

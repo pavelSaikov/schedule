@@ -187,8 +187,6 @@ export const TableContent: FC<ITableContent> = ({
 
   useEffect(() => filterColumns(), [checkedColumns, filterColumns]);
 
-  useEffect(() => console.log(rowsContent), [rowsContent]);
-
   return (
     <>
       <Table

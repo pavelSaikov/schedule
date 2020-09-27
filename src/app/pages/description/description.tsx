@@ -469,71 +469,65 @@ export const DescriptionPage: FC = () => {
       <Button className="description_back-button" type="primary">
         <Link to={`/${AppRoutes.main}`}>Back</Link>
       </Button>
-      {eventCategory &&
-        title &&
-        organizer &&
-        startDateTime &&
-        deadlineDateTime !== null &&
-        description &&
-        links && (
-          <>
-            <div className="description_info-container">
-              <DescriptionHeader
+      {eventCategory && title !== null && (
+        <>
+          <div className="description_info-container">
+            <DescriptionHeader
+              appMode={appMode}
+              availableEventCategories={eventCategoriesWithoutDeadline}
+              defaultEventCategory={eventCategory}
+              defaultTitle={title}
+              onEventCategoryEdit={onEventCategoryEdit}
+              onTitleEdit={onTitleEdit}
+            />
+            <div className="description_content-wrapper">
+              <Divider orientation="left">Organizer</Divider>
+              <OrganizerCell
                 appMode={appMode}
-                availableEventCategories={eventCategoriesWithoutDeadline}
-                defaultEventCategory={eventCategory}
-                defaultTitle={title}
-                onEventCategoryEdit={onEventCategoryEdit}
-                onTitleEdit={onTitleEdit}
+                gitLink={'https://github.com/' + organizer}
+                onEditClick={onOpenModalForEditingOrganizer}
               />
-              <div className="description_content-wrapper">
-                <Divider orientation="left">Organizer</Divider>
-                <OrganizerCell
-                  appMode={appMode}
-                  gitLink={'https://github.com/' + organizer}
-                  onEditClick={onOpenModalForEditingOrganizer}
-                />
-                <Divider orientation="left">Dates</Divider>
-                <TaskDates
-                  appMode={appMode}
-                  startDateTime={startDateTime}
-                  deadlineDateTime={deadlineDateTime}
-                  timeZone={timeZone}
-                  onChangeStartDate={onChangeStartDateTime}
-                  onChangeDeadlineDate={onChangeDeadlineDateTime}
-                />
-                <Divider orientation="left">Description</Divider>
-                <TaskDescription
-                  appMode={appMode}
-                  taskDescription={description}
-                  onDescriptionChange={onDescriptionChange}
-                />
-                {linksComponent}
-                {videosComponent}
-                {/* {photosComponent} */}
-                {mapComponent}
-                {feedbackComponent}
-                {questionFormComponent}
-              </div>
+              <Divider orientation="left">Dates</Divider>
+              <TaskDates
+                appMode={appMode}
+                startDateTime={startDateTime}
+                deadlineDateTime={deadlineDateTime}
+                timeZone={timeZone}
+                onChangeStartDate={onChangeStartDateTime}
+                onChangeDeadlineDate={onChangeDeadlineDateTime}
+              />
+              <Divider orientation="left">Description</Divider>
+              <TaskDescription
+                appMode={appMode}
+                taskDescription={description}
+                onDescriptionChange={onDescriptionChange}
+              />
+              {linksComponent}
+              {videosComponent}
+              {photosComponent}
+              {mapComponent}
+              {feedbackComponent}
+              {questionFormComponent}
             </div>
-            <OrganizerEditor
-              onCancelClick={onCloseModalForEditingOrganizer}
-              onOrganizerEdit={onOrganizerEdit}
-              visible={isOrganizerModalVisible}
-              organizer={organizer}
-            />
-            <AddVideoModal
-              onAddVideo={onAddNewVideo}
-              visible={isVideoModalVisible}
-              onCancelClick={onCloseVideoModal}
-            />
-            <AddPhotoModal
-              onAddPhoto={onAddNewPhoto}
-              visible={isPhotoModalVisible}
-              onCancelClick={onClosePhotoModal}
-            />
-          </>
-        )}
+          </div>
+          <OrganizerEditor
+            onCancelClick={onCloseModalForEditingOrganizer}
+            onOrganizerEdit={onOrganizerEdit}
+            visible={isOrganizerModalVisible}
+            organizer={organizer}
+          />
+          <AddVideoModal
+            onAddVideo={onAddNewVideo}
+            visible={isVideoModalVisible}
+            onCancelClick={onCloseVideoModal}
+          />
+          <AddPhotoModal
+            onAddPhoto={onAddNewPhoto}
+            visible={isPhotoModalVisible}
+            onCancelClick={onClosePhotoModal}
+          />
+        </>
+      )}
     </div>
   );
 };

@@ -60,7 +60,6 @@ export const TableSchedule: FC<ITableSchedule> = ({ onMoreClick }) => {
   }, [eventCategories, events, timeZone]);
 
   useEffect(() => {
-    console.log(selectedRows);
     setIsHideButtonAvailable(Object.values(selectedRows).some(arr => arr.length !== 0));
   }, [selectedRows]);
 
@@ -202,10 +201,10 @@ export const TableSchedule: FC<ITableSchedule> = ({ onMoreClick }) => {
         <Collapse className="table-schedule_collapse" accordion>
           {Object.keys(visibleRowsSortedByWeeks).map((key, index) => {
             const week: ITableRowInfo[] = visibleRowsSortedByWeeks[key];
-            const firstDay: string = moment(week[0].dateTime).tz(timeZone).day(1).format('DD MMMM');
+            const firstDay: string = moment(week[0].dateTime).tz(timeZone).isoWeekday(1).format('DD MMMM');
             const lastDay: string = moment(week[week.length - 1].dateTime)
               .tz(timeZone)
-              .day(7)
+              .isoWeekday(7)
               .format('DD MMMM');
 
             return (

@@ -137,7 +137,15 @@ export const TableModals: FC<ITableModals> = ({
       const newCheckedEventCategories = [...checkedEventCategories, ...nameOfNewEventCategories];
 
       dispatch(setCheckedEventCategories({ payload: newCheckedEventCategories }));
-      dispatch(uploadEventCategories(updatedEventCategories, new AbortController()));
+      dispatch(
+        uploadEventCategories(
+          [
+            ...updatedEventCategories,
+            eventCategories.find(ec => ec.categoryName === RowCategoryName.deadline),
+          ],
+          new AbortController(),
+        ),
+      );
 
       if (editableEvent.eventCategoryName === newEventCategory.categoryName) {
         return;

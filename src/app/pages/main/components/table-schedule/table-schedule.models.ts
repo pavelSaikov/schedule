@@ -86,7 +86,7 @@ export const separateByWeeks = (rows: ITableRowInfo[], timeZone: TimeZone): IRow
   const weeks = Object.create(null);
   rows.map(row => {
     const date = moment(row.dateTime).tz(timeZone);
-    weeks[date.week()] ? weeks[date.week()].push(row) : (weeks[date.week()] = [row]);
+    weeks[date.isoWeek()] ? weeks[date.isoWeek()].push(row) : (weeks[date.isoWeek()] = [row]);
   });
 
   return weeks;

@@ -91,14 +91,12 @@ export const ColorsEditor: FC<IColorsEditor> = ({
   );
 
   const onOk = useCallback(() => {
-    const updatedEventCategories = isUserCanAddNewCategories
-      ? [...eventCategories, defaultEventCategories.find(e => e.categoryName === RowCategoryName.deadline)]
-      : [...eventCategories];
+    const updatedEventCategories = [...eventCategories];
 
     onOkClick(updatedEventCategories, {
       ...eventCategories.find(e => e.categoryName === selectedCategoryName),
     });
-  }, [defaultEventCategories, eventCategories, isUserCanAddNewCategories, onOkClick, selectedCategoryName]);
+  }, [eventCategories, onOkClick, selectedCategoryName]);
 
   const onCancel = useCallback(() => onCancelClick(), [onCancelClick]);
 

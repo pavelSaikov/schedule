@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
@@ -14,6 +15,7 @@ module.exports = envOptions => {
     output: {
       filename: 'bundle.js',
       path: path.resolve(__dirname, './dist'),
+      publicPath: '/',
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
@@ -67,6 +69,15 @@ module.exports = envOptions => {
       }),
       new webpack.DefinePlugin({
         MAP_API_KEY: JSON.stringify(process.env.MAP_API_KEY),
+      }),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: path.resolve(__dirname, './_redirects'),
+            to: path.resolve(__dirname, './dist/_redirects'),
+            toType: 'file',
+          },
+        ],
       }),
     ],
     devtool: 'source-map',

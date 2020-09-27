@@ -1,10 +1,10 @@
 import './photo-list.scss';
 
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Carousel, Image, Tooltip, Button } from 'antd';
-import { CloseCircleOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined } from '@ant-design/icons';
 import { AppMode } from '../../../../models/app.models';
-import { errorImage, slidersNumber } from './photo-list.models';
+import { maxSlidersNumber, maxPhotoWidth } from './photo-list.models';
 
 interface IPhoto {
   photoUrls: string[];
@@ -15,61 +15,86 @@ interface IPhoto {
 
 export const PhotoList: FC<IPhoto> = ({ photoUrls, onRemovePhotoClick, onAddPhotoClick, appMode }) => {
   const slider = useRef(null);
-  const [photos, setPhotos] = useState<string[]>(new Array(slidersNumber).fill(''));
+  const [photos, setPhotos] = useState<string[]>(photoUrls);
+  const [slidesShowNumber, setSlidesShowNumber] = useState<number>(0);
+  const [maxWidth, setMaxWidth] = useState<number>(0);
+
+  useEffect(() => {
+    if (photoUrls.length <= maxSlidersNumber) {
+      setMaxWidth(maxPhotoWidth * photoUrls.length);
+      return;
+    }
+
+    setMaxWidth(0);
+  }, [photoUrls.length]);
 
   useEffect(() => {
     if (!photoUrls.length) {
       return;
     }
-    if (photoUrls.length >= slidersNumber + 1) {
-      setPhotos(photoUrls);
+
+    if (photoUrls.length === photos.length) {
       return;
     }
-    setPhotos([...photoUrls, ...new Array(slidersNumber + 1 - photoUrls.length).fill('')]);
-  }, [photoUrls]);
 
-  const nextPhoto = useCallback(() => slider.current.slick.slickNext(), []);
-  const previousPhoto = useCallback(() => slider.current.slick.slickPrev(), []);
+    setPhotos(photoUrls);
+  }, [photoUrls, photos.length]);
+
+  useEffect(() => {
+    if (slidesShowNumber === photoUrls.length) {
+      return;
+    }
+
+    if (photoUrls.length > maxSlidersNumber) {
+      setSlidesShowNumber(maxSlidersNumber);
+      return;
+    }
+
+    setSlidesShowNumber(photoUrls.length);
+  }, [photoUrls.length, slidesShowNumber]);
 
   return (
-    <div className="photoList_wrapper">
+    <div>
       {photoUrls.length === 0 ? null : (
-        <div className="photoList_slider">
-          <Tooltip title="Previous photo">
-            <LeftOutlined className="photoList_arrow" onClick={() => previousPhoto()} />
-          </Tooltip>
+        <div style={{ maxWidth: `${maxWidth === 0 ? 'auto' : maxWidth}px` }}>
           <Carousel
-            className="photoList_carousel"
             ref={slider}
-            dots={false}
+            dots={true}
             infinite={false}
-            slidesToShow={slidersNumber}
+            slidesToShow={slidesShowNumber}
             slidesToScroll={1}
+            centerMode={false}
             arrows={false}
+            variableWidth={false}
+            responsive={[
+              {
+                breakpoint: 700,
+                settings: {
+                  slidesToShow: slidesShowNumber > 3 ? 3 : slidesShowNumber,
+                },
+              },
+              {
+                breakpoint: 500,
+                settings: {
+                  slidesToShow: slidesShowNumber > 2 ? 2 : slidesShowNumber,
+                },
+              },
+            ]}
           >
-            {photos.map(photoLink =>
-              photoLink === '' ? (
-                <div key={Date.now()}>
-                  <Image className="photoList_photo--size" src="error" fallback={errorImage} />
-                </div>
-              ) : (
-                <div className="photoList_slide" key={Date.now()}>
-                  <Image className="photoList_photo photoList_photo--size" src={photoLink} />
-                  {appMode === AppMode.mentor && (
-                    <Tooltip title="Delete photo">
-                      <CloseCircleOutlined
-                        className="photoList_deleteIcon"
-                        onClick={() => onRemovePhotoClick(photoLink)}
-                      />
-                    </Tooltip>
-                  )}
-                </div>
-              ),
-            )}
+            {photos.map(photoLink => (
+              <div className="photo_wrapper photo_wrapper--size" key={Date.now()}>
+                <Image className="photoList_photo" src={photoLink} />
+                {appMode === AppMode.mentor && (
+                  <Tooltip title="Delete photo">
+                    <CloseCircleOutlined
+                      className="photoList_deleteIcon"
+                      onClick={() => onRemovePhotoClick(photoLink)}
+                    />
+                  </Tooltip>
+                )}
+              </div>
+            ))}
           </Carousel>
-          <Tooltip title="Next photo">
-            <RightOutlined className="photoList_arrow" onClick={() => nextPhoto()} />
-          </Tooltip>
         </div>
       )}
       {appMode === AppMode.mentor && (

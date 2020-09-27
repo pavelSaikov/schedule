@@ -1,0 +1,32 @@
+.description-header_header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px 10px 20px;
+  box-sizing: border-box;
+  border-bottom: 2px solid #00000073;
+  @media screen and (max-width: 510px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.description-header_title {
+  width: 80%;
+  max-width: 700px;
+  @media screen and (max-width: 910px) {
+    max-width: 600px;
+  }
+  @media screen and (max-width: 500px) {
+    font-size: 19px !important;
+  }
+}
+
+.description-header_tag-container {
+  display: flex;
+  align-items: center;
+  & .icon {
+    margin-left: 5px;
+    cursor: pointer;
+  }
+}

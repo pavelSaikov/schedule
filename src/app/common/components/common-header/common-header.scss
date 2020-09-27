@@ -1,0 +1,33 @@
+.header_header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.header_buttons-container {
+  display: flex;
+
+  & .header_select {
+    width: 180px;
+    margin-right: 20px;
+  }
+
+  @media screen and (max-width: 500px) {
+    flex-direction: column;
+    align-items: center;
+
+    & .header_select {
+      margin: 0;
+    }
+
+    & .button {
+      width: 180px;
+      margin-top: 10px;
+    }
+  }
+}
+
+.header_switch {
+  width: 60px;
+}

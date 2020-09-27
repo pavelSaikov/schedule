@@ -1,0 +1,23 @@
+.description_wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.description_back-button {
+  margin: 15px 0 0 20px;
+  align-self: baseline;
+}
+
+.description_info-container {
+  margin-top: 25px;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.description_content-wrapper {
+  padding: 0 40px;
+  @media screen and (max-width: 550px) {
+    padding: 0;
+  }
+}

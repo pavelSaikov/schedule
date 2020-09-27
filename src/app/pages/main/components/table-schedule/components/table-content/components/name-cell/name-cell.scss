@@ -1,0 +1,12 @@
+.name-cell_wrapper {
+  display: flex;
+  align-items: center;
+
+  & .ant-typography,
+  .ant-typography p {
+    margin-bottom: 0;
+  }
+  & .ant-typography.ant-typography-ellipsis {
+    max-width: 200px;
+  }
+}

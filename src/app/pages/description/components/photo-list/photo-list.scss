@@ -1,0 +1,34 @@
+.photo_wrapper--size {
+  overflow: hidden;
+  padding: 10px;
+}
+
+.photoList_photo {
+  cursor: pointer;
+}
+
+.photoList_deleteIcon {
+  position: absolute;
+  font-size: 20px;
+  top: 3px;
+  right: 3px;
+}
+
+.photo_wrapper {
+  position: relative;
+}
+
+.slick-dots {
+  & > li {
+    background-color: #1890ff !important;
+  }
+
+  .slick-active > button {
+    background: #005db3 !important;
+    opacity: 1 !important;
+  }
+}
+
+.slick-dots-bottom {
+  bottom: -15px !important;
+}

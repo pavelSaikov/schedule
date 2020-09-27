@@ -1,0 +1,16 @@
+.calendar-schedule_list-item {
+  padding: 2px 0;
+  margin: 5px 0;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.calendar-schedule_text {
+  text-overflow: ellipsis;
+}
+
+.calendar-schedule_spinner {
+  position: absolute;
+  top: calc(60% - 20px);
+  left: calc(50% - 20px);
+}

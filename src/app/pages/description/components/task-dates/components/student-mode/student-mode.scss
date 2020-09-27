@@ -1,0 +1,15 @@
+.student-mode_dates-container {
+  display: flex;
+  margin-top: 20px;
+  @media screen and (max-width: 550px) {
+    flex-direction: column;
+  }
+}
+
+.student-mode_deadline-date {
+  margin-left: 40px;
+
+  @media screen and (max-width: 550px) {
+    margin: 0;
+  }
+}

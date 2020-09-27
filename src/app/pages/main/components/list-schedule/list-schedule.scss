@@ -1,0 +1,33 @@
+.list-schedule_wrapper {
+  width: 100%;
+}
+
+.list-schedule_buttons-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 10px;
+}
+
+.list-schedule_list {
+  max-width: 1000px;
+  margin: 30px auto;
+}
+
+.list-schedule_list-item {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  @media screen and (max-width: 750px) {
+    padding: 10px !important;
+  }
+  @media screen and (max-width: 400px) {
+    padding: 5px !important;
+  }
+}
+
+.list-schedule_checkbox {
+  margin: 0 24px 0 0;
+  @media screen and (max-width: 590px) {
+    margin: 0 5px 0 0;
+  }
+}

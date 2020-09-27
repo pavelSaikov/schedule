@@ -1,0 +1,14 @@
+.tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+  max-width: 50px;
+  height: 15px;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  border-width: 1px;
+  border-style: solid;
+}

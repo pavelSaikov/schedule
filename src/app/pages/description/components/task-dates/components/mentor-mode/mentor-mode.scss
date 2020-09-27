@@ -1,0 +1,12 @@
+.mentor-mode-dates-container {
+  display: flex;
+  margin-top: 20px;
+
+  @media screen and (max-width: 520px) {
+    flex-direction: column;
+  }
+}
+
+.mentor-mode_date-container {
+  margin-right: 20px;
+}

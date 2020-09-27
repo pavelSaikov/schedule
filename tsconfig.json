@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es5",
+    "jsx": "react",
+    "lib": ["es2019", "DOM"]
+  },
+  "include": ["src"],
+  "compileOnSave": false
+}
